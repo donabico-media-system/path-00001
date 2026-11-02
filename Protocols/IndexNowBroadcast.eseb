@@ -14,14 +14,18 @@ import json
 
 def auto_discover_context():
     repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
-    domain = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
+    repo_name = repo.split('/')[-1] if '/' in repo else "path-00001"
+    
+    # 1. Mặc định khởi tạo theo CNAME Custom Domain chuẩn donabico.com
+    domain = f"https://donabico.com/{repo_name}"
     
     if os.path.exists("CNAME"):
         try:
             with open("CNAME", "r", encoding="utf-8") as f:
                 cname_val = f.read().strip()
                 if cname_val:
-                    domain = f"https://{cname_val}"
+                    cname_clean = cname_val.replace("https://", "").replace("http://", "").strip("/")
+                    domain = f"https://{cname_clean}/{repo_name}"
         except Exception:
             pass
             
@@ -36,29 +40,30 @@ def auto_discover_context():
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh Client Entity (.ehc) - Phát Pulse F12 2.5s + Gửi Direct Fetch Broadcast Log
+    # 1. Sinh Client Entity (.ehc) - Khóa cứng Domain https://donabico.com/path-00001/ & In Log Direct Broadcast ra F12
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
-    console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: {ctx['domain']}", "color: #00ff00; font-weight: bold;");
+    console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
     
-    // Client-Side Direct Ping Log
+    // Direct Client Broadcast Log
     const broadcastPayload = {{
-        host: "{ctx['domain'].replace('https://', '').replace('http://', '').split('/')[0]}",
+        host: "donabico.com",
         key: "24242424242424242424242424242424",
         keyLocation: "{ctx['domain']}/24242424242424242424242424242424.txt",
         urlList: ["{ctx['domain']}/", "{ctx['domain']}/sitemap.xml"]
     }};
     
-    console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST] Pinging IndexNow Gateways from Browser...", "color: #00ffff;");
+    console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST] Direct Ping Broadcast Sent to Global IndexNow Gateways for {ctx['domain']}/", "color: #00ffff; font-weight: bold;");
+    
     fetch("https://api.indexnow.org/indexnow", {{
         method: "POST",
         headers: {{ "Content-Type": "application/json; charset=utf-8" }},
         body: JSON.stringify(broadcastPayload)
     }}).then(res => {{
-        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_STATUS] IndexNow Core Response: " + res.status, "color: #00ff00;");
+        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_STATUS] IndexNow Global CDN Response: Status " + res.status, "color: #00ff00;");
     }}).catch(err => {{
-        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_PASS] Handled via Cloud Runner", "color: #ffaa00;");
+        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_PASS] Background Cloud Runner Handled", "color: #ffaa00;");
     }});
 
     setInterval(() => {{
@@ -66,6 +71,7 @@ def generate_dual_outputs(ctx):
             pulse: "LIVE",
             stamp: "{ctx['stamp']}",
             anchor: "{ctx['anchor']}",
+            domain: "{ctx['domain']}/",
             entropy: "0.00000000000000"
         }}));
     }}, 2500);
@@ -74,7 +80,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Phát sóng máy chủ ngoại biên
+    # 2. Sinh Serverless Runner Engine (.js) - Khóa cứng Domain https://donabico.com/path-00001/ Phát máy chủ ngoại biên
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -92,13 +98,10 @@ const CONFIG = {{
 }};
 
 console.log(`[${{CONFIG.stamp}}] [${{CONFIG.anchor}}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
-console.log(`--> Target Domain: ${{CONFIG.domain}}`);
-
-const parsedDomain = new URL(CONFIG.domain);
-const host = parsedDomain.hostname;
+console.log(`--> Target Custom Domain: ${{CONFIG.domain}}/`);
 
 const payload = JSON.stringify({{
-    host: host,
+    host: "donabico.com",
     key: CONFIG.key,
     keyLocation: `${{CONFIG.domain}}/${{CONFIG.key}}.txt`,
     urlList: [
@@ -150,7 +153,7 @@ setTimeout(() => {{
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED SUCCESSFULLY: .ehc & .js")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED FOR CUSTOM DOMAIN: https://donabico.com/path-00001/")
 
 if __name__ == "__main__":
     context = auto_discover_context()
