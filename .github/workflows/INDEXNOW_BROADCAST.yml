@@ -1,0 +1,36 @@
+name: INDEXNOW_BROADCAST
+
+on:
+  push:
+    paths:
+      - 'Protocols/*.eseb'
+  schedule:
+    - cron: '0 */4 * * *'  # Chạy tự động 4 tiếng/lần 24/7/365
+  workflow_dispatch:        # Kích hoạt thủ công
+
+jobs:
+  ESEB_BROADCAST_RUNNER:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python Runtime (Master Orchestrator)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Execute ESEB Master Protocol
+        env:
+          GITHUB_CLASSIC_TOKEN: ${{ secrets.GITHUB_CLASSIC_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python Protocols/IndexNowBroadcast.eseb
+
+      - name: Commit & Push Auto-Generated Dual Entities (.ehc & .js)
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico-media-system"
+          git add Protocols/*.ehc Protocols/*.js
+          git diff-index --quiet HEAD || git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
+          git push
