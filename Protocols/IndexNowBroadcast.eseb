@@ -38,12 +38,11 @@ def auto_discover_context():
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh Client Entity (.ehc) - Tiêm Dynamic Favicon Chặn 404 & Phát Pulse F12 2.5s
+    # 1. Sinh Client Entity (.ehc) - Dynamic Favicon Chặn 404 & Pulse F12
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
     
-    // Auto-inject Data URI Favicon to suppress 404 errors dynamically
     if (!document.querySelector("link[rel*='icon']")) {{
         const link = document.createElement('link');
         link.type = 'image/x-icon';
@@ -69,7 +68,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Thực thi phát sóng ngoại biên Node.js 100%
+    # 2. Sinh Serverless Runner Engine (.js) - Chuẩn Header HTTPS Fix 403
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -89,8 +88,10 @@ const CONFIG = {{
 console.log(`[${{CONFIG.stamp}}] [${{CONFIG.anchor}}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
 console.log(`--> Target Custom Domain: ${{CONFIG.domain}}/`);
 
+const hostName = "donabico.com";
+
 const payload = JSON.stringify({{
-    host: "donabico.com",
+    host: hostName,
     key: CONFIG.key,
     keyLocation: `${{CONFIG.domain}}/${{CONFIG.key}}.txt`,
     urlList: [
@@ -109,9 +110,10 @@ CONFIG.endpoints.forEach((targetUrl) => {{
         path: targetParsed.pathname,
         method: 'POST',
         headers: {{
+            'Host': targetParsed.hostname,
             'Content-Type': 'application/json; charset=utf-8',
             'Content-Length': Buffer.byteLength(payload),
-            'User-Agent': 'ESEB-V3000-Serverless-Runner'
+            'User-Agent': 'Mozilla/5.0 (compatible; ESEB-IndexNow-Runner/1.0)'
         }}
     }};
 
@@ -142,7 +144,7 @@ setTimeout(() => {{
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Dynamic Favicon .ehc & Serverless Runner .js")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Fixed Headers for IndexNow 200/202 Response")
 
 if __name__ == "__main__":
     context = auto_discover_context()
