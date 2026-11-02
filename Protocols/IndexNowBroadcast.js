@@ -66,7 +66,6 @@ CONFIG.endpoints.forEach((targetUrl) => {
     req.end();
 });
 
-// Force exit sau 5 giây nếu có endpoint bị kẹt socket
 setTimeout(() => {
     process.exit(0);
 }, 5000);
