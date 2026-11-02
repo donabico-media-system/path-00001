@@ -5,8 +5,11 @@ on:
     paths:
       - 'Protocols/*.eseb'
   schedule:
-    - cron: '0 */4 * * *'  # Chạy tự động 4 tiếng/lần 24/7/365
-  workflow_dispatch:        # Kích hoạt thủ công
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   ESEB_BROADCAST_RUNNER:
@@ -14,8 +17,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_CLASSIC_TOKEN }}
+          persist-credentials: true  # Giữ cấu hình xác thực cho các bước Git tiếp theo
 
-      - name: Setup Python Runtime (Master Orchestrator)
+      - name: Setup Python Runtime
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -27,10 +33,16 @@ jobs:
         run: |
           python Protocols/IndexNowBroadcast.eseb
 
-      - name: Commit & Push Auto-Generated Dual Entities (.ehc & .js)
+      - name: Commit & Push Dual Entities (.ehc & .js)
+        env:
+          CLASSIC_TOKEN: ${{ secrets.GITHUB_CLASSIC_TOKEN }}
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico-media-system"
+          
+          # Đặt lại URL xác thực chính xác bằng Classic Token
+          git remote set-url origin "https://x-access-token:${CLASSIC_TOKEN}@github.com/${{ github.repository }}.git"
+          
           git add Protocols/*.ehc Protocols/*.js
           git diff-index --quiet HEAD || git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
