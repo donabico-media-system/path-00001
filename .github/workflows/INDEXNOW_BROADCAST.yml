@@ -5,8 +5,8 @@ on:
     paths:
       - 'Protocols/*.eseb'
   schedule:
-    - cron: '0 */4 * * *'
-  workflow_dispatch:
+    - cron: '0 */4 * * *'  # Chạy tự động 4 tiếng/lần 24/7/365
+  workflow_dispatch:        # Kích hoạt thủ công
 
 permissions:
   contents: write
@@ -20,6 +20,7 @@ jobs:
         with:
           token: ${{ secrets.CLASSIC_API_TOKEN }}
           persist-credentials: true
+          fetch-depth: 0   # Lấy toàn bộ lịch sử commit để tránh lỗi xung đột ref
 
       - name: Setup Python Runtime
         uses: actions/setup-python@v5
@@ -44,5 +45,12 @@ jobs:
           git remote set-url origin "https://x-access-token:${EXEC_TOKEN}@github.com/${{ github.repository }}.git"
           
           git add Protocols/*.ehc Protocols/*.js
-          git diff-index --quiet HEAD || git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
-          git push origin HEAD:${{ github.ref_name }}
+          
+          # Kiểm tra thay đổi: Nếu có mới commit, pull rebase và push
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "[V-STAMP-24] No changes detected in Dual Entities (.ehc & .js)."
+          fi
