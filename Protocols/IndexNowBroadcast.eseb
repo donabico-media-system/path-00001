@@ -38,7 +38,13 @@ def auto_discover_context():
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh Client Entity (.ehc) - Dynamic Favicon Chặn 404 & Pulse F12
+    # 0. Tự động sinh tệp Key IndexNow vật lý ở thư mục gốc repo để IndexNow Gateway xác thực thành công (Chống 403)
+    key_val = "24242424242424242424242424242424"
+    key_file_path = f"{key_val}.txt"
+    with open(key_file_path, "w", encoding="utf-8") as f:
+        f.write(key_val)
+
+    # 1. Sinh Client Entity (.ehc) - Sạch Log F12, tiêm Favicon Base64 chặn 404
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
@@ -68,7 +74,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Chuẩn Header HTTPS Fix 403
+    # 2. Sinh Serverless Runner Engine (.js) - Chuẩn Payload IndexNow 200/202
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -78,17 +84,18 @@ const CONFIG = {{
     anchor: "{ctx['anchor']}",
     repo: "{ctx['repo']}",
     domain: "{ctx['domain']}",
-    key: "24242424242424242424242424242424",
+    key: "{key_val}",
     endpoints: [
         "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow"
+        "https://www.google.com/indexnow"
     ]
 }};
 
 console.log(`[${{CONFIG.stamp}}] [${{CONFIG.anchor}}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
 console.log(`--> Target Custom Domain: ${{CONFIG.domain}}/`);
 
-const hostName = "donabico.com";
+const parsedTargetDomain = new URL(CONFIG.domain);
+const hostName = parsedTargetDomain.hostname;
 
 const payload = JSON.stringify({{
     host: hostName,
@@ -144,7 +151,7 @@ setTimeout(() => {{
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Fixed Headers for IndexNow 200/202 Response")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT + INDEXNOW KEY GENERATED: {key_file_path} Created Successfully!")
 
 if __name__ == "__main__":
     context = auto_discover_context()
