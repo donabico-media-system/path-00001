@@ -17,8 +17,10 @@ const CONFIG = {
 console.log(`[${CONFIG.stamp}] [${CONFIG.anchor}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
 console.log(`--> Target Custom Domain: ${CONFIG.domain}/`);
 
+const hostName = "donabico.com";
+
 const payload = JSON.stringify({
-    host: "donabico.com",
+    host: hostName,
     key: CONFIG.key,
     keyLocation: `${CONFIG.domain}/${CONFIG.key}.txt`,
     urlList: [
@@ -37,9 +39,10 @@ CONFIG.endpoints.forEach((targetUrl) => {
         path: targetParsed.pathname,
         method: 'POST',
         headers: {
+            'Host': targetParsed.hostname,
             'Content-Type': 'application/json; charset=utf-8',
             'Content-Length': Buffer.byteLength(payload),
-            'User-Agent': 'ESEB-V3000-Serverless-Runner'
+            'User-Agent': 'Mozilla/5.0 (compatible; ESEB-IndexNow-Runner/1.0)'
         }
     };
 

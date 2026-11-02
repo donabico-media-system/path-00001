@@ -2,7 +2,6 @@
 (function() {
     'use strict';
     
-    // Auto-inject Data URI Favicon to suppress 404 errors dynamically
     if (!document.querySelector("link[rel*='icon']")) {
         const link = document.createElement('link');
         link.type = 'image/x-icon';
