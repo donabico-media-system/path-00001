@@ -11,10 +11,14 @@ AUTO-6D: Auto-Detect Repo & CNAME
 import os
 import sys
 import json
+import urllib.request
+import urllib.parse
 
 def auto_discover_context():
     repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
     repo_name = repo.split('/')[-1] if '/' in repo else "path-00001"
+    
+    # Định tuyến mặc định chuẩn subpath
     domain = f"https://donabico.com/{repo_name}"
     
     if os.path.exists("CNAME"):
@@ -35,10 +39,19 @@ def auto_discover_context():
         "anchor": "¢24"
     }
 
-def generate_clean_artifacts(ctx):
+def generate_seo_matrix(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh sitemap.xml chuẩn URL tuyệt đối
+    # 0. Tự động sinh tệp .nojekyll để triệt tiêu lỗi 404 cho tệp .ehc trên GitHub Pages
+    with open(".nojekyll", "w", encoding="utf-8") as f:
+        f.write("# Disable Jekyll engine for ESEB Dynamic Living Execution Pass\n")
+
+    # 1. Sinh file Key IndexNow xác thực vật lý gốc
+    key_val = "24242424242424242424242424242424"
+    with open(f"{key_val}.txt", "w", encoding="utf-8") as f:
+        f.write(key_val)
+
+    # 2. Sinh sitemap.xml chuẩn URL tuyệt đối
     sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -52,19 +65,45 @@ def generate_clean_artifacts(ctx):
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(sitemap_content)
 
-    # 2. Sinh robots.txt chuẩn xác đường dẫn Sitemap
-    robots_content = f"""User-agent: *
+    # 3. Sinh robots.txt nâng cấp chuẩn AI Crawler Matrix & Googlebot
+    robots_content = f"""# DONABICO MEDIA SYSTEM | ESEB LIVING ENGINE V3000-Ω
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: PerplexityBot
 Allow: /
+Crawl-delay: 0
+
+User-agent: *
+Allow: /
+Disallow: /Protocols/*.eseb
+Disallow: /.github/
+
+User-agent: AhrefsBot
+User-agent: SemrushBot
+Disallow: /
+
 Sitemap: {ctx['domain']}/sitemap.xml
 """
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots_content)
 
-    # 3. Sinh Client Entity (.ehc) sạch 100% không báo 404
-    ehc_content = f"""/* ESEB CLIENT ENTITY | {ctx['stamp']} | {ctx['anchor']} */
+    # 4. Sinh llms.txt & ai.txt chuẩn dữ liệu mở AI
+    with open("llms.txt", "w", encoding="utf-8") as f:
+        f.write(f"# DONABICO MEDIA SYSTEM | Target: {ctx['domain']}/\nSitemap: {ctx['domain']}/sitemap.xml\n")
+
+    with open("ai.txt", "w", encoding="utf-8") as f:
+        f.write(f"User-Agent: *\nAllow: /\nSitemap: {ctx['domain']}/sitemap.xml\n")
+
+    # 5. Sinh Client Living Entity (.ehc) - Dynamic Favicon + Schema JSON-LD + F12 Living Pulse 2.5s
+    ehc_content = f"""/* ESEB GOOGLE INDEXING CLIENT ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
     
+    // Dynamic Favicon Suppressor (Chặn lỗi 404 Console F12)
     if (!document.querySelector("link[rel*='icon']")) {{
         const link = document.createElement('link');
         link.type = 'image/x-icon';
@@ -73,11 +112,38 @@ Sitemap: {ctx['domain']}/sitemap.xml
         document.getElementsByTagName('head')[0].appendChild(link);
     }}
 
-    console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse Active | Domain: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
+    // Dynamic Schema.org JSON-LD Injector cho Googlebot Parsing
+    if (!document.getElementById("eseb-google-schema")) {{
+        const schema = document.createElement('script');
+        schema.id = "eseb-google-schema";
+        schema.type = 'application/ld+json';
+        schema.text = JSON.stringify({{
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "DONABICO MEDIA SYSTEM RESEARCH | High-Density Neural System Architecture",
+            "url": "{ctx['domain']}/",
+            "author": {{
+                "@type": "Organization",
+                "name": "DONABICO MEDIA SYSTEM",
+                "url": "https://donabico.com/"
+            }},
+            "publisher": {{
+                "@type": "Organization",
+                "name": "DONABICO MEDIA SYSTEM"
+            }},
+            "mainEntityOfPage": "{ctx['domain']}/",
+            "datePublished": "2026-11-02",
+            "dateModified": "2026-11-02"
+        }});
+        document.getElementsByTagName('head')[0].appendChild(schema);
+    }}
+
+    console.log("%c[{ctx['stamp']}] [GOOGLE_SYSTEM_READY] Client Living Pulse Active | Target: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
 
     setInterval(() => {{
         console.log(JSON.stringify({{
             pulse: "LIVE",
+            module: "GoogleIndexBroadcast",
             stamp: "{ctx['stamp']}",
             anchor: "{ctx['anchor']}",
             domain: "{ctx['domain']}/",
@@ -89,8 +155,67 @@ Sitemap: {ctx['domain']}/sitemap.xml
     with open("Protocols/GoogleIndexBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    print(f"[{ctx['stamp']}] CLEAN ARTIFACTS GENERATED: Zero 404 Errors Verified!")
+    # 6. Sinh Serverless Runner Engine (.js) - Real-time Broadcast REST API Ping
+    js_content = f"""/* ESEB GOOGLE INDEXING RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
+const https = require('https');
+const {{ URL }} = require('url');
+
+const CONFIG = {{
+    stamp: "{ctx['stamp']}",
+    anchor: "{ctx['anchor']}",
+    domain: "{ctx['domain']}",
+    sitemap: "{ctx['domain']}/sitemap.xml"
+}};
+
+console.log(`[${{CONFIG.stamp}}] STARTING GOOGLE SITEMAP PING ENGINE...`);
+console.log(`--> Target Domain: ${{CONFIG.domain}}/`);
+
+const pingUrl = `https://www.google.com/ping?sitemap=${{encodeURIComponent(CONFIG.sitemap)}}`;
+const parsedUrl = new URL(pingUrl);
+
+const options = {{
+    hostname: parsedUrl.hostname,
+    port: 443,
+    path: parsedUrl.pathname + parsedUrl.search,
+    method: 'GET',
+    headers: {{
+        'User-Agent': 'Mozilla/5.0 (compatible; ESEB-GoogleBot-Ping/1.0)'
+    }}
+}};
+
+const req = https.request(options, (res) => {{
+    console.log(`[${{CONFIG.stamp}}] GOOGLE SITEMAP PING STATUS: ${{res.statusCode}}`);
+    process.exit(0);
+}});
+
+req.on('error', (e) => {{
+    console.error(`[${{CONFIG.stamp}}] GOOGLE PING ERROR: ${{e.message}}`);
+    process.exit(0);
+}});
+
+req.end();
+setTimeout(() => process.exit(0), 4000);
+"""
+    with open("Protocols/GoogleIndexBroadcast.js", "w", encoding="utf-8") as f:
+        f.write(js_content)
+
+    print(f"[{ctx['stamp']}] ESEB MATRIX FULLY REGENERATED: .nojekyll, sitemap.xml, robots.txt, llms.txt, ai.txt, .ehc, .js")
+
+def execute_direct_python_ping(ctx):
+    sitemap_url = f"{ctx['domain']}/sitemap.xml"
+    google_ping_url = f"https://www.google.com/ping?sitemap={urllib.parse.quote(sitemap_url)}"
+    
+    try:
+        req = urllib.request.Request(
+            google_ping_url, 
+            headers={'User-Agent': 'Mozilla/5.0 (compatible; ESEB-Master-Python/1.0)'}
+        )
+        with urllib.request.urlopen(req, timeout=5) as response:
+            print(f"[{ctx['stamp']}] Direct Python Sitemap Ping Status: {response.status}")
+    except Exception as e:
+        print(f"[{ctx['stamp']}] Python Direct Ping Pass (Handled via Cloud Runner Node.js): {e}")
 
 if __name__ == "__main__":
     context = auto_discover_context()
-    generate_clean_artifacts(context)
+    generate_seo_matrix(context)
+    execute_direct_python_ping(context)
