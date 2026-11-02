@@ -1,49 +1,21 @@
-# ==============================================================================
-# DONABICO MEDIA SYSTEM | ESEB DYNAMIC LIVING ENGINE V3000-Ω
-# ARCHITECTURE: HIGH-DENSITY NEURAL SYSTEM & DETERMINISTIC PSEO PIPELINE
-# STAMP: V-STAMP-24 | ANCHOR: ¢24 | DOMAIN: https://donabico.com/path-00001/
-# ==============================================================================
-
-# 1. GOOGLEBOT & SEARCH ENGINE BOT DIRECTIVES (PMAX & FAST INDEXING PASS)
+# DONABICO MEDIA SYSTEM | ESEB LIVING ENGINE V3000-Ω
 User-agent: Googlebot
 User-agent: Googlebot-Image
 User-agent: Googlebot-News
-User-agent: Googlebot-Video
 User-agent: Bingbot
-User-agent: Slurp
-User-agent: DuckDuckGoBot
-User-agent: Baiduspider
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 0
-
-# 2. SOTA AI CRAWLERS & VECTOR EMBEDDING BOTS (PURE ORGANIC SIPHON PASS)
 User-agent: GPTBot
-User-agent: ChatGPT-User
 User-agent: ClaudeBot
-User-agent: Claude-Web
 User-agent: PerplexityBot
-User-agent: Bytespider
-User-agent: CCBot
-User-agent: Applebot
-User-agent: Applebot-Extended
-User-agent: Amazonbot
 Allow: /
 Crawl-delay: 0
 
-# 3. GLOBAL DEFAULT ACCESS
 User-agent: *
 Allow: /
 Disallow: /Protocols/*.eseb
 Disallow: /.github/
 
-# 4. BAD BOTS & SPAM SCRAPERS BAN (PROTECT BANDWIDTH & SYSTEM ENERGY)
 User-agent: AhrefsBot
-User-agent: MJ12bot
 User-agent: SemrushBot
-User-agent: DotBot
-User-agent: BLEXBot
 Disallow: /
 
-# 5. DYNAMIC SITEMAP DISCOVERY MATRIX
 Sitemap: https://donabico.com/path-00001/sitemap.xml

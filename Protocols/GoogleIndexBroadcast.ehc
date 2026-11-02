@@ -2,7 +2,7 @@
 (function() {
     'use strict';
     
-    // Dynamic Favicon Suppressor
+    // Dynamic Favicon Suppressor (Chặn 404 Console)
     if (!document.querySelector("link[rel*='icon']")) {
         const link = document.createElement('link');
         link.type = 'image/x-icon';
@@ -11,7 +11,7 @@
         document.getElementsByTagName('head')[0].appendChild(link);
     }
 
-    // Dynamic Schema.org JSON-LD Injector for Googlebot Parsing
+    // Dynamic Schema.org JSON-LD Injector cho Googlebot Parsing
     if (!document.getElementById("eseb-google-schema")) {
         const schema = document.createElement('script');
         schema.id = "eseb-google-schema";

@@ -10,7 +10,7 @@ const CONFIG = {
 };
 
 console.log(`[${CONFIG.stamp}] STARTING GOOGLE SITEMAP PING ENGINE...`);
-console.log(`--> Target: ${CONFIG.domain}/`);
+console.log(`--> Target Domain: ${CONFIG.domain}/`);
 
 const pingUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent(CONFIG.sitemap)}`;
 const parsedUrl = new URL(pingUrl);
