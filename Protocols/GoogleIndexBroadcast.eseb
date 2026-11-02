@@ -166,3 +166,27 @@ setTimeout(() => process.exit(0), 4000);
 if __name__ == "__main__":
     context = auto_discover_context()
     generate_google_artifacts(context)
+
+# 2. Sinh robots.txt nâng cấp chuẩn BigTech & AI Crawler Matrix
+    robots_content = f"""# DONABICO MEDIA SYSTEM | ESEB LIVING ENGINE V3000-Ω
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 0
+
+User-agent: *
+Allow: /
+Disallow: /Protocols/*.eseb
+Disallow: /.github/
+
+User-agent: AhrefsBot
+User-agent: SemrushBot
+Disallow: /
+
+Sitemap: {ctx['domain']}/sitemap.xml
+"""
+    with open("robots.txt", "w", encoding="utf-8") as f:
+        f.write(robots_content)
