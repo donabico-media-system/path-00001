@@ -10,14 +10,15 @@ const CONFIG = {
     key: "24242424242424242424242424242424",
     endpoints: [
         "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow"
+        "https://www.google.com/indexnow"
     ]
 };
 
 console.log(`[${CONFIG.stamp}] [${CONFIG.anchor}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
 console.log(`--> Target Custom Domain: ${CONFIG.domain}/`);
 
-const hostName = "donabico.com";
+const parsedTargetDomain = new URL(CONFIG.domain);
+const hostName = parsedTargetDomain.hostname;
 
 const payload = JSON.stringify({
     host: hostName,
