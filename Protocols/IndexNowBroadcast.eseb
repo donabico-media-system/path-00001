@@ -38,10 +38,20 @@ def auto_discover_context():
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh Client Entity (.ehc) - Sạch Log F12, không bị lỗi CORS Browser
+    # 1. Sinh Client Entity (.ehc) - Tiêm Dynamic Favicon Chặn 404 & Phát Pulse F12 2.5s
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
+    
+    // Auto-inject Data URI Favicon to suppress 404 errors dynamically
+    if (!document.querySelector("link[rel*='icon']")) {{
+        const link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAEAAAAAEAIAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAD///8A';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }}
+
     console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
     console.log("%c[{ctx['stamp']}] [BROADCAST_PASS] Global Gateway Broadcast Managed via Serverless Cloud Runner", "color: #00ffff; font-weight: bold;");
 
@@ -59,7 +69,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Phát sóng thực tế 100% trên Máy chủ Ngoại biên Node.js
+    # 2. Sinh Serverless Runner Engine (.js) - Thực thi phát sóng ngoại biên Node.js 100%
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -132,7 +142,7 @@ setTimeout(() => {{
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Clean Client .ehc & Serverless Runner .js")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Dynamic Favicon .ehc & Serverless Runner .js")
 
 if __name__ == "__main__":
     context = auto_discover_context()
