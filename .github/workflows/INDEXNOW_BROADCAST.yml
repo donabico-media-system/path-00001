@@ -5,8 +5,8 @@ on:
     paths:
       - 'Protocols/*.eseb'
   schedule:
-    - cron: '0 */4 * * *'
-  workflow_dispatch:
+    - cron: '0 */4 * * *'  # Chạy tự động 4 tiếng/lần 24/7/365
+  workflow_dispatch:        # Kích hoạt thủ công
 
 permissions:
   contents: write
@@ -22,28 +22,28 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Setup Python Runtime
+      - name: Setup Python Runtime (Master Engine)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Setup Node.js Runtime
+      - name: Setup Node.js Runtime (Serverless Runner)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Execute Master Protocol
+      - name: Execute Master Protocol (Generate Dual Entities)
         env:
           CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           python Protocols/IndexNowBroadcast.eseb
 
-      - name: Execute Serverless Runner
+      - name: Execute Serverless Runner (Broadcast to Global Gateways)
         run: |
           node Protocols/IndexNowBroadcast.js
 
-      - name: Commit & Push Dual Entities
+      - name: Commit & Push Auto-Generated Dual Entities (.ehc & .js)
         env:
           EXEC_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
         run: |
@@ -57,4 +57,6 @@ jobs:
             git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
             git pull --rebase origin ${{ github.ref_name }}
             git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "[V-STAMP-24] No changes detected in Dual Entities."
           fi
