@@ -15,8 +15,6 @@ import json
 def auto_discover_context():
     repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
     repo_name = repo.split('/')[-1] if '/' in repo else "path-00001"
-    
-    # 1. Mặc định khởi tạo theo CNAME Custom Domain chuẩn donabico.com
     domain = f"https://donabico.com/{repo_name}"
     
     if os.path.exists("CNAME"):
@@ -40,31 +38,12 @@ def auto_discover_context():
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh Client Entity (.ehc) - Khóa cứng Domain https://donabico.com/path-00001/ & In Log Direct Broadcast ra F12
+    # 1. Sinh Client Entity (.ehc) - Sạch Log F12, không bị lỗi CORS Browser
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
     console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
-    
-    // Direct Client Broadcast Log
-    const broadcastPayload = {{
-        host: "donabico.com",
-        key: "24242424242424242424242424242424",
-        keyLocation: "{ctx['domain']}/24242424242424242424242424242424.txt",
-        urlList: ["{ctx['domain']}/", "{ctx['domain']}/sitemap.xml"]
-    }};
-    
-    console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST] Direct Ping Broadcast Sent to Global IndexNow Gateways for {ctx['domain']}/", "color: #00ffff; font-weight: bold;");
-    
-    fetch("https://api.indexnow.org/indexnow", {{
-        method: "POST",
-        headers: {{ "Content-Type": "application/json; charset=utf-8" }},
-        body: JSON.stringify(broadcastPayload)
-    }}).then(res => {{
-        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_STATUS] IndexNow Global CDN Response: Status " + res.status, "color: #00ff00;");
-    }}).catch(err => {{
-        console.log("%c[{ctx['stamp']}] [CLIENT_BROADCAST_PASS] Background Cloud Runner Handled", "color: #ffaa00;");
-    }});
+    console.log("%c[{ctx['stamp']}] [BROADCAST_PASS] Global Gateway Broadcast Managed via Serverless Cloud Runner", "color: #00ffff; font-weight: bold;");
 
     setInterval(() => {{
         console.log(JSON.stringify({{
@@ -80,7 +59,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Khóa cứng Domain https://donabico.com/path-00001/ Phát máy chủ ngoại biên
+    # 2. Sinh Serverless Runner Engine (.js) - Phát sóng thực tế 100% trên Máy chủ Ngoại biên Node.js
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -153,7 +132,7 @@ setTimeout(() => {{
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED FOR CUSTOM DOMAIN: https://donabico.com/path-00001/")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: Clean Client .ehc & Serverless Runner .js")
 
 if __name__ == "__main__":
     context = auto_discover_context()
