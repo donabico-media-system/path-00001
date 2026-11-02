@@ -6,7 +6,7 @@ const CONFIG = {
     stamp: "V-STAMP-24",
     anchor: "¢24",
     repo: "donabico-media-system/path-00001",
-    domain: "https://donabico-media-system.github.io/path-00001",
+    domain: "https://donabico.com/path-00001",
     key: "24242424242424242424242424242424",
     endpoints: [
         "https://api.indexnow.org/indexnow",
@@ -15,13 +15,10 @@ const CONFIG = {
 };
 
 console.log(`[${CONFIG.stamp}] [${CONFIG.anchor}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
-console.log(`--> Target Domain: ${CONFIG.domain}`);
-
-const parsedDomain = new URL(CONFIG.domain);
-const host = parsedDomain.hostname;
+console.log(`--> Target Custom Domain: ${CONFIG.domain}/`);
 
 const payload = JSON.stringify({
-    host: host,
+    host: "donabico.com",
     key: CONFIG.key,
     keyLocation: `${CONFIG.domain}/${CONFIG.key}.txt`,
     urlList: [

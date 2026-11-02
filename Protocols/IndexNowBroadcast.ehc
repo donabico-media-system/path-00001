@@ -1,25 +1,26 @@
 /* ESEB CLIENT LIVING ENTITY | V-STAMP-24 | ¢24 */
 (function() {
     'use strict';
-    console.log("%c[V-STAMP-24] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: https://donabico-media-system.github.io/path-00001", "color: #00ff00; font-weight: bold;");
+    console.log("%c[V-STAMP-24] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: https://donabico.com/path-00001/", "color: #00ff00; font-weight: bold;");
     
-    // Client-Side Direct Ping Log
+    // Direct Client Broadcast Log
     const broadcastPayload = {
-        host: "donabico-media-system.github.io",
+        host: "donabico.com",
         key: "24242424242424242424242424242424",
-        keyLocation: "https://donabico-media-system.github.io/path-00001/24242424242424242424242424242424.txt",
-        urlList: ["https://donabico-media-system.github.io/path-00001/", "https://donabico-media-system.github.io/path-00001/sitemap.xml"]
+        keyLocation: "https://donabico.com/path-00001/24242424242424242424242424242424.txt",
+        urlList: ["https://donabico.com/path-00001/", "https://donabico.com/path-00001/sitemap.xml"]
     };
     
-    console.log("%c[V-STAMP-24] [CLIENT_BROADCAST] Pinging IndexNow Gateways from Browser...", "color: #00ffff;");
+    console.log("%c[V-STAMP-24] [CLIENT_BROADCAST] Direct Ping Broadcast Sent to Global IndexNow Gateways for https://donabico.com/path-00001/", "color: #00ffff; font-weight: bold;");
+    
     fetch("https://api.indexnow.org/indexnow", {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify(broadcastPayload)
     }).then(res => {
-        console.log("%c[V-STAMP-24] [CLIENT_BROADCAST_STATUS] IndexNow Core Response: " + res.status, "color: #00ff00;");
+        console.log("%c[V-STAMP-24] [CLIENT_BROADCAST_STATUS] IndexNow Global CDN Response: Status " + res.status, "color: #00ff00;");
     }).catch(err => {
-        console.log("%c[V-STAMP-24] [CLIENT_BROADCAST_PASS] Handled via Cloud Runner", "color: #ffaa00;");
+        console.log("%c[V-STAMP-24] [CLIENT_BROADCAST_PASS] Background Cloud Runner Handled", "color: #ffaa00;");
     });
 
     setInterval(() => {
@@ -27,6 +28,7 @@
             pulse: "LIVE",
             stamp: "V-STAMP-24",
             anchor: "¢24",
+            domain: "https://donabico.com/path-00001/",
             entropy: "0.00000000000000"
         }));
     }, 2500);
