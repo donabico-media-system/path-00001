@@ -1,14 +1,23 @@
 name: GOOGLE_INDEX_BROADCAST
+
 on:
   push:
+    branches: ["main", "master"]
     paths:
       - 'Protocols/*.eseb'
+      - 'index.html'
   schedule:
-    - cron: '0 */2 * * *'
-  workflow_dispatch:
+    - cron: '0 */2 * * *'  # Chạy dồn dập 2 tiếng/lần ép Googlebot cào dữ liệu
+  workflow_dispatch:        # Hỗ trợ kích hoạt thủ công từ giao diện Actions
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   ESEB_GOOGLE_RUNNER:
@@ -21,17 +30,17 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Setup Python Runtime
+      - name: Setup Python Runtime (Master Protocol Engine)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Setup Node.js Runtime
+      - name: Setup Node.js Runtime (Serverless Runner)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Execute Master Protocol
+      - name: Execute Master Protocol (Generate Dual Entities & Artifacts)
         env:
           CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -40,9 +49,9 @@ jobs:
 
       - name: Broadcast Ping to Googlebot Engine
         run: |
-          node Protocols/GoogleIndexBroadcast.js
+          node Protocols/GoogleIndexBroadcast.js || true
 
-      - name: Commit & Push Auto-Generated Artifacts
+      - name: Commit & Push Auto-Generated Artifacts (.nojekyll, .ehc, .js, sitemap, robots)
         env:
           EXEC_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
         run: |
@@ -51,9 +60,29 @@ jobs:
           
           git remote set-url origin "https://x-access-token:${EXEC_TOKEN}@github.com/${{ github.repository }}.git"
           
-          git add sitemap.xml robots.txt Protocols/GoogleIndexBroadcast.ehc Protocols/GoogleIndexBroadcast.js
+          # Đẩy đầy đủ .nojekyll, sitemap, robots, llms, ai, key txt và các tệp .ehc / .js
+          git add .nojekyll sitemap.xml robots.txt llms.txt ai.txt *.txt Protocols/*.ehc Protocols/*.js
+          
           if ! git diff-index --quiet HEAD; then
-            git commit -m "[V-STAMP-24] Auto-deploy Google SEO Artifacts (.ehc, .js, sitemap, robots)"
+            git commit -m "[V-STAMP-24] Auto-deploy Google SEO Artifacts (.nojekyll, .ehc, .js, sitemap, robots)"
             git pull --rebase origin ${{ github.ref_name }}
             git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "[V-STAMP-24] No changes detected in Google SEO Artifacts."
           fi
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  DEPLOY_TO_PAGES:
+    needs: ESEB_GOOGLE_RUNNER
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Direct to GitHub Pages CDN
+        id: deployment
+        uses: actions/deploy-pages@v4
