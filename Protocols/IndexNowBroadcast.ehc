@@ -1,6 +1,16 @@
 /* ESEB CLIENT LIVING ENTITY | V-STAMP-24 | ¢24 */
 (function() {
     'use strict';
+    
+    // Auto-inject Data URI Favicon to suppress 404 errors dynamically
+    if (!document.querySelector("link[rel*='icon']")) {
+        const link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAEAAAAAEAIAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAD///8A';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }
+
     console.log("%c[V-STAMP-24] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: https://donabico.com/path-00001/", "color: #00ff00; font-weight: bold;");
     console.log("%c[V-STAMP-24] [BROADCAST_PASS] Global Gateway Broadcast Managed via Serverless Cloud Runner", "color: #00ffff; font-weight: bold;");
 
