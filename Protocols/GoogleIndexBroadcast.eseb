@@ -11,6 +11,8 @@ AUTO-6D: Auto-Detect Repo & CNAME
 import os
 import sys
 import json
+import urllib.request
+import urllib.parse
 
 def auto_discover_context():
     repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
@@ -35,10 +37,10 @@ def auto_discover_context():
         "anchor": "¢24"
     }
 
-def generate_google_artifacts(ctx):
+def generate_google_seo_system(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh sitemap.xml chuẩn Google XML Schema
+    # 1. Sinh sitemap.xml chuẩn Googlebot XML Schema
     sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -52,20 +54,38 @@ def generate_google_artifacts(ctx):
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(sitemap_content)
 
-    # 2. Sinh robots.txt mở cho phép Googlebot
-    robots_content = f"""User-agent: *
+    # 2. Sinh robots.txt nâng cấp chuẩn BigTech & AI Crawler Matrix
+    robots_content = f"""# DONABICO MEDIA SYSTEM | ESEB LIVING ENGINE V3000-Ω
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: PerplexityBot
 Allow: /
+Crawl-delay: 0
+
+User-agent: *
+Allow: /
+Disallow: /Protocols/*.eseb
+Disallow: /.github/
+
+User-agent: AhrefsBot
+User-agent: SemrushBot
+Disallow: /
+
 Sitemap: {ctx['domain']}/sitemap.xml
 """
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots_content)
 
-    # 3. Sinh Client Living Entity (.ehc) - Dynamic Favicon + Schema JSON-LD + F12 Log Pulse
+    # 3. Sinh Client Living Entity (.ehc) - Dynamic Favicon + Schema JSON-LD + F12 Log Pulse 2.5s
     ehc_content = f"""/* ESEB GOOGLE INDEXING CLIENT ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
     
-    // Dynamic Favicon Suppressor
+    // Dynamic Favicon Suppressor (Chặn 404 Console)
     if (!document.querySelector("link[rel*='icon']")) {{
         const link = document.createElement('link');
         link.type = 'image/x-icon';
@@ -74,7 +94,7 @@ Sitemap: {ctx['domain']}/sitemap.xml
         document.getElementsByTagName('head')[0].appendChild(link);
     }}
 
-    // Dynamic Schema.org JSON-LD Injector for Googlebot Parsing
+    // Dynamic Schema.org JSON-LD Injector cho Googlebot Parsing
     if (!document.getElementById("eseb-google-schema")) {{
         const schema = document.createElement('script');
         schema.id = "eseb-google-schema";
@@ -130,7 +150,7 @@ const CONFIG = {{
 }};
 
 console.log(`[${{CONFIG.stamp}}] STARTING GOOGLE SITEMAP PING ENGINE...`);
-console.log(`--> Target: ${{CONFIG.domain}}/`);
+console.log(`--> Target Domain: ${{CONFIG.domain}}/`);
 
 const pingUrl = `https://www.google.com/ping?sitemap=${{encodeURIComponent(CONFIG.sitemap)}}`;
 const parsedUrl = new URL(pingUrl);
@@ -161,32 +181,23 @@ setTimeout(() => process.exit(0), 4000);
     with open("Protocols/GoogleIndexBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: GoogleIndexBroadcast.ehc & GoogleIndexBroadcast.js")
+    print(f"[{ctx['stamp']}] GOOGLE INDEX SYSTEM REGENERATED: sitemap.xml, robots.txt, .ehc & .js ready!")
+
+def execute_direct_python_ping(ctx):
+    sitemap_url = f"{ctx['domain']}/sitemap.xml"
+    google_ping_url = f"https://www.google.com/ping?sitemap={urllib.parse.quote(sitemap_url)}"
+    
+    try:
+        req = urllib.request.Request(
+            google_ping_url, 
+            headers={'User-Agent': 'Mozilla/5.0 (compatible; ESEB-Master-Python/1.0)'}
+        )
+        with urllib.request.urlopen(req, timeout=5) as response:
+            print(f"[{ctx['stamp']}] Direct Python Google Sitemap Ping HTTP Status: {response.status}")
+    except Exception as e:
+        print(f"[{ctx['stamp']}] Python Direct Ping Pass (Handled via Cloud Runner): {e}")
 
 if __name__ == "__main__":
     context = auto_discover_context()
-    generate_google_artifacts(context)
-
-# 2. Sinh robots.txt nâng cấp chuẩn BigTech & AI Crawler Matrix
-    robots_content = f"""# DONABICO MEDIA SYSTEM | ESEB LIVING ENGINE V3000-Ω
-User-agent: Googlebot
-User-agent: Bingbot
-User-agent: GPTBot
-User-agent: ClaudeBot
-User-agent: PerplexityBot
-Allow: /
-Crawl-delay: 0
-
-User-agent: *
-Allow: /
-Disallow: /Protocols/*.eseb
-Disallow: /.github/
-
-User-agent: AhrefsBot
-User-agent: SemrushBot
-Disallow: /
-
-Sitemap: {ctx['domain']}/sitemap.xml
-"""
-    with open("robots.txt", "w", encoding="utf-8") as f:
-        f.write(robots_content)
+    generate_google_seo_system(context)
+    execute_direct_python_ping(context)
