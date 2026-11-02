@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+[ESEB MASTER PROTOCOL SOURCE]
+MODULE: GoogleIndexBroadcast
+STAMP: V-STAMP-24 | ANCHOR: ¢24 | BRAND: DONABICO MEDIA SYSTEM
+STANDARD: 04THU (Thực Dụng - Thực Tế - Thực Tiễn - Thực Chiến 100%)
+AUTO-6D: Auto-Detect Repo & CNAME
+"""
+
+import os
+import sys
+import json
+
+def auto_discover_context():
+    repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
+    repo_name = repo.split('/')[-1] if '/' in repo else "path-00001"
+    domain = f"https://donabico.com/{repo_name}"
+    
+    if os.path.exists("CNAME"):
+        try:
+            with open("CNAME", "r", encoding="utf-8") as f:
+                cname_val = f.read().strip()
+                if cname_val:
+                    cname_clean = cname_val.replace("https://", "").replace("http://", "").strip("/")
+                    domain = f"https://{cname_clean}/{repo_name}"
+        except Exception:
+            pass
+            
+    return {
+        "repo": repo,
+        "domain": domain,
+        "token": os.environ.get("CLASSIC_API_TOKEN", ""),
+        "stamp": "V-STAMP-24",
+        "anchor": "¢24"
+    }
+
+def generate_google_seo_artifacts(ctx):
+    os.makedirs("Protocols", exist_ok=True)
+    
+    # 1. Sinh sitemap.xml chuẩn Googlebot XML Schema
+    sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{ctx['domain']}/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>always</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+"""
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
+        f.write(sitemap_content)
+
+    # 2. Sinh robots.txt mở cho phép Googlebot truy cập
+    robots_content = f"""User-agent: *
+Allow: /
+Sitemap: {ctx['domain']}/sitemap.xml
+"""
+    with open("robots.txt", "w", encoding="utf-8") as f:
+        f.write(robots_content)
+
+    # 3. Sinh Google Indexing Ping Runner (.js)
+    js_content = f"""/* ESEB GOOGLE INDEXING RUNNER | {ctx['stamp']} | {ctx['anchor']} */
+const https = require('https');
+const {{ URL }} = require('url');
+
+const CONFIG = {{
+    stamp: "{ctx['stamp']}",
+    anchor: "{ctx['anchor']}",
+    domain: "{ctx['domain']}",
+    sitemap: "{ctx['domain']}/sitemap.xml"
+}};
+
+console.log(`[${{CONFIG.stamp}}] STARTING GOOGLE SITEMAP PING...`);
+
+const pingUrl = `https://www.google.com/ping?sitemap=${{encodeURIComponent(CONFIG.sitemap)}}`;
+const parsedUrl = new URL(pingUrl);
+
+const options = {{
+    hostname: parsedUrl.hostname,
+    port: 443,
+    path: parsedUrl.pathname + parsedUrl.search,
+    method: 'GET',
+    headers: {{
+        'User-Agent': 'Mozilla/5.0 (compatible; ESEB-GoogleBot-Ping/1.0)'
+    }}
+}};
+
+const req = https.request(options, (res) => {{
+    console.log(`[${{CONFIG.stamp}}] GOOGLE PING RESPONSE STATUS: ${{res.statusCode}}`);
+    process.exit(0);
+}});
+
+req.on('error', (e) => {{
+    console.error(`[${{CONFIG.stamp}}] GOOGLE PING ERROR: ${{e.message}}`);
+    process.exit(0);
+}});
+
+req.end();
+
+setTimeout(() => process.exit(0), 4000);
+"""
+    with open("Protocols/GoogleIndexBroadcast.js", "w", encoding="utf-8") as f:
+        f.write(js_content)
+
+    print(f"[{ctx['stamp']}] GOOGLE INDEX ARTIFACTS GENERATED SUCCESSFULLY")
+
+if __name__ == "__main__":
+    context = auto_discover_context()
+    generate_google_seo_artifacts(context)
