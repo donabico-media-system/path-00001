@@ -11,15 +11,11 @@ AUTO-6D: Auto-Detect Repo & CNAME
 import os
 import sys
 import json
-import urllib.request
-import urllib.error
 
-# 1. AUTO-6D: TỰ ĐỘNG NHẬN DIỆN MÔI TRƯỜNG & DOMAIN
 def auto_discover_context():
     repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
-    
-    # Đọc CNAME nếu có
     domain = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
+    
     if os.path.exists("CNAME"):
         try:
             with open("CNAME", "r", encoding="utf-8") as f:
@@ -32,60 +28,15 @@ def auto_discover_context():
     return {
         "repo": repo,
         "domain": domain,
-        "token": os.environ.get("GITHUB_CLASSIC_TOKEN", ""),
+        "token": os.environ.get("CLASSIC_API_TOKEN", ""),
         "stamp": "V-STAMP-24",
         "anchor": "¢24"
     }
 
-# 2. XẢY RA KHI THỰC THI BRODCAST QUA REST API THẬT (STATUS 200/202)
-def execute_broadcast_pipeline(ctx):
-    print(f"[{ctx['stamp']}] [¢24] INITIALIZING API BROADCAST ENGINE...")
-    print(f"--> Target Repo: {ctx['repo']}")
-    print(f"--> Target Domain: {ctx['domain']}")
-
-    # Kiểm tra Token
-    if not ctx['token']:
-        print("[WARNING] GITHUB_CLASSIC_TOKEN is missing in Environment. Operating in Public Read-Only Mode.")
-
-    # Tạo Payload chuẩn IndexNow Broadcast
-    endpoint = "https://api.indexnow.org/indexnow"
-    payload_data = {
-        "host": ctx['domain'].replace("https://", "").replace("http://", "").split('/')[0],
-        "key": "24242424242424242424242424242424",
-        "keyLocation": f"{ctx['domain']}/24242424242424242424242424242424.txt",
-        "urlList": [
-            f"{ctx['domain']}/",
-            f"{ctx['domain']}/sitemap.xml"
-        ]
-    }
-
-    headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "User-Agent": "ESEB-V3000-Omega-Engine"
-    }
-
-    req = urllib.request.Request(
-        endpoint, 
-        data=json.dumps(payload_data).encode('utf-8'), 
-        headers=headers, 
-        method='POST'
-    )
-
-    try:
-        with urllib.request.urlopen(req) as response:
-            status_code = response.getcode()
-            print(f"[{ctx['stamp']}] BROADCAST SUCCESSFUL | HTTP STATUS: {status_code}")
-            print(f"[STATUS 202 OK] Real-time Plug & Play Operational Runtime Active.")
-    except urllib.error.HTTPError as e:
-        print(f"[{ctx['stamp']}] BROADCAST RESPONSE: HTTP {e.code} (Payload Processed)")
-    except Exception as ex:
-        print(f"[{ctx['stamp']}] BROADCAST EXCEPTION: {str(ex)}")
-
-# 3. TỰ SINH SONG SONG TỆP EHC (CLIENT) VÀ JS (SERVERLESS RUNNER)
 def generate_dual_outputs(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # Sinh Client Entity (.ehc) - JS ES2026+ 0ms delay
+    # 1. Sinh Client Entity (.ehc) - Phát Pulse F12 2.5s
     ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
 (function() {{
     'use strict';
@@ -104,19 +55,69 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # Sinh Serverless Runner (.js)
-    js_content = f"""/* ESEB SERVERLESS RUNNER | {ctx['stamp']} | {ctx['anchor']} */
+    # 2. Sinh Serverless Runner Engine (.js) - Khóa cứng CLASSIC_API_TOKEN & Phát API toàn cầu
+    js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
+const url = require('url');
 
-console.log("[SERVERLESS RUNNER] Executing Plug & Play 24/7 Pipeline...");
-console.log("Repo Context: {ctx['repo']}");
+const CONFIG = {{
+    stamp: "{ctx['stamp']}",
+    anchor: "{ctx['anchor']}",
+    repo: "{ctx['repo']}",
+    domain: "{ctx['domain']}",
+    key: "24242424242424242424242424242424",
+    endpoints: [
+        "https://api.indexnow.org/indexnow",
+        "https://www.bing.com/indexnow",
+        "https://yandex.com/indexnow"
+    ]
+}};
+
+console.log(`[${{CONFIG.stamp}}] [${{CONFIG.anchor}}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
+console.log(`--> Target Domain: ${{CONFIG.domain}}`);
+
+const host = CONFIG.domain.replace(/^https?:\\\/\\\//, '').split('/')[0];
+const payload = JSON.stringify({{
+    host: host,
+    key: CONFIG.key,
+    keyLocation: `${{CONFIG.domain}}/${{CONFIG.key}}.txt`,
+    urlList: [
+        `${{CONFIG.domain}}/`,
+        `${{CONFIG.domain}}/sitemap.xml`
+    ]
+}});
+
+CONFIG.endpoints.forEach((targetUrl) => {{
+    const parsedUrl = url.parse(targetUrl);
+    const options = {{
+        hostname: parsedUrl.hostname,
+        port: 443,
+        path: parsedUrl.path,
+        method: 'POST',
+        headers: {{
+            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Length': Buffer.byteLength(payload),
+            'User-Agent': 'ESEB-V3000-Serverless-Runner'
+        }}
+    }};
+
+    const req = https.request(options, (res) => {{
+        console.log(`[${{CONFIG.stamp}}] BROADCAST TO ${{parsedUrl.hostname}} -> HTTP STATUS: ${{res.statusCode}}`);
+    }});
+
+    req.on('error', (e) => {{
+        console.error(`[${{CONFIG.stamp}}] BROADCAST ERROR (${{parsedUrl.hostname}}): ${{e.message}}`);
+    }});
+
+    req.write(payload);
+    req.end();
+}});
 """
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: IndexNowBroadcast.ehc & IndexNowBroadcast.js")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED SUCCESSFULLY: .ehc & .js (TOKEN LOCKED: CLASSIC_API_TOKEN)")
 
 if __name__ == "__main__":
     context = auto_discover_context()
     generate_dual_outputs(context)
-    execute_broadcast_pipeline(context)
