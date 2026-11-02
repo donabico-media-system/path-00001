@@ -1,123 +1,60 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-[ESEB MASTER PROTOCOL SOURCE]
-MODULE: IndexNowBroadcast
-STAMP: V-STAMP-24 | ANCHOR: ¢24 | BRAND: DONABICO MEDIA SYSTEM
-STANDARD: 04THU (Thực Dụng - Thực Tế - Thực Tiễn - Thực Chiến 100%)
-AUTO-6D: Auto-Detect Repo & CNAME
-"""
+name: INDEXNOW_BROADCAST_WORKFLOW
 
-import os
-import sys
-import json
+on:
+  push:
+    paths:
+      - 'Protocols/*.eseb'
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
 
-def auto_discover_context():
-    repo = os.environ.get("GITHUB_REPOSITORY", "donabico-media-system/path-00001")
-    domain = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
-    
-    if os.path.exists("CNAME"):
-        try:
-            with open("CNAME", "r", encoding="utf-8") as f:
-                cname_val = f.read().strip()
-                if cname_val:
-                    domain = f"https://{cname_val}"
-        except Exception:
-            pass
-            
-    return {
-        "repo": repo,
-        "domain": domain,
-        "token": os.environ.get("CLASSIC_API_TOKEN", ""),
-        "stamp": "V-STAMP-24",
-        "anchor": "¢24"
-    }
+permissions:
+  contents: write
 
-def generate_dual_outputs(ctx):
-    os.makedirs("Protocols", exist_ok=True)
-    
-    # 1. Sinh Client Entity (.ehc) - Phát Pulse F12 2.5s
-    ehc_content = f"""/* ESEB CLIENT LIVING ENTITY | {ctx['stamp']} | {ctx['anchor']} */
-(function() {{
-    'use strict';
-    console.log("%c[{ctx['stamp']}] [SYSTEM_READY] Client Living Pulse 2.5s Active | Domain: {ctx['domain']}", "color: #00ff00; font-weight: bold;");
-    
-    setInterval(() => {{
-        console.log(JSON.stringify({{
-            pulse: "LIVE",
-            stamp: "{ctx['stamp']}",
-            anchor: "{ctx['anchor']}",
-            entropy: "0.00000000000000"
-        }}));
-    }}, 2500);
-}})();
-"""
-    with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
-        f.write(ehc_content)
+jobs:
+  ESEB_BROADCAST_RUNNER:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CLASSIC_API_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 0
 
-    # 2. Sinh Serverless Runner Engine (.js) - Khóa cứng CLASSIC_API_TOKEN & Phát API toàn cầu
-    js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
-const https = require('https');
-const url = require('url');
+      - name: Setup Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-const CONFIG = {{
-    stamp: "{ctx['stamp']}",
-    anchor: "{ctx['anchor']}",
-    repo: "{ctx['repo']}",
-    domain: "{ctx['domain']}",
-    key: "24242424242424242424242424242424",
-    endpoints: [
-        "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow",
-        "https://yandex.com/indexnow"
-    ]
-}};
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-console.log(`[${{CONFIG.stamp}}] [${{CONFIG.anchor}}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
-console.log(`--> Target Domain: ${{CONFIG.domain}}`);
+      - name: Execute Master Protocol
+        env:
+          CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python Protocols/IndexNowBroadcast.eseb
 
-const host = CONFIG.domain.replace(/^https?:\\\/\\\//, '').split('/')[0];
-const payload = JSON.stringify({{
-    host: host,
-    key: CONFIG.key,
-    keyLocation: `${{CONFIG.domain}}/${{CONFIG.key}}.txt`,
-    urlList: [
-        `${{CONFIG.domain}}/`,
-        `${{CONFIG.domain}}/sitemap.xml`
-    ]
-}});
+      - name: Execute Serverless Runner
+        run: |
+          node Protocols/IndexNowBroadcast.js
 
-CONFIG.endpoints.forEach((targetUrl) => {{
-    const parsedUrl = url.parse(targetUrl);
-    const options = {{
-        hostname: parsedUrl.hostname,
-        port: 443,
-        path: parsedUrl.path,
-        method: 'POST',
-        headers: {{
-            'Content-Type': 'application/json; charset=utf-8',
-            'Content-Length': Buffer.byteLength(payload),
-            'User-Agent': 'ESEB-V3000-Serverless-Runner'
-        }}
-    }};
-
-    const req = https.request(options, (res) => {{
-        console.log(`[${{CONFIG.stamp}}] BROADCAST TO ${{parsedUrl.hostname}} -> HTTP STATUS: ${{res.statusCode}}`);
-    }});
-
-    req.on('error', (e) => {{
-        console.error(`[${{CONFIG.stamp}}] BROADCAST ERROR (${{parsedUrl.hostname}}): ${{e.message}}`);
-    }});
-
-    req.write(payload);
-    req.end();
-}});
-"""
-    with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
-        f.write(js_content)
-
-    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED SUCCESSFULLY: .ehc & .js (TOKEN LOCKED: CLASSIC_API_TOKEN)")
-
-if __name__ == "__main__":
-    context = auto_discover_context()
-    generate_dual_outputs(context)
+      - name: Commit & Push Dual Entities
+        env:
+          EXEC_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico-media-system"
+          
+          git remote set-url origin "https://x-access-token:${EXEC_TOKEN}@github.com/${{ github.repository }}.git"
+          
+          git add Protocols/*.ehc Protocols/*.js
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "[V-STAMP-24] Auto-deploy Dual Entities (.ehc & .js)"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin HEAD:${{ github.ref_name }}
+          fi
