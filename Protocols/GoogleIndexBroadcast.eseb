@@ -35,10 +35,10 @@ def auto_discover_context():
         "anchor": "¢24"
     }
 
-def generate_google_seo_artifacts(ctx):
+def generate_google_artifacts(ctx):
     os.makedirs("Protocols", exist_ok=True)
     
-    # 1. Sinh sitemap.xml chuẩn Googlebot XML Schema
+    # 1. Sinh sitemap.xml chuẩn Google XML Schema
     sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -52,7 +52,7 @@ def generate_google_seo_artifacts(ctx):
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(sitemap_content)
 
-    # 2. Sinh robots.txt mở cho phép Googlebot truy cập
+    # 2. Sinh robots.txt mở cho phép Googlebot
     robots_content = f"""User-agent: *
 Allow: /
 Sitemap: {ctx['domain']}/sitemap.xml
@@ -60,8 +60,65 @@ Sitemap: {ctx['domain']}/sitemap.xml
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots_content)
 
-    # 3. Sinh Google Indexing Ping Runner (.js)
-    js_content = f"""/* ESEB GOOGLE INDEXING RUNNER | {ctx['stamp']} | {ctx['anchor']} */
+    # 3. Sinh Client Living Entity (.ehc) - Dynamic Favicon + Schema JSON-LD + F12 Log Pulse
+    ehc_content = f"""/* ESEB GOOGLE INDEXING CLIENT ENTITY | {ctx['stamp']} | {ctx['anchor']} */
+(function() {{
+    'use strict';
+    
+    // Dynamic Favicon Suppressor
+    if (!document.querySelector("link[rel*='icon']")) {{
+        const link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAEAAAAAEAIAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAD///8A';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }}
+
+    // Dynamic Schema.org JSON-LD Injector for Googlebot Parsing
+    if (!document.getElementById("eseb-google-schema")) {{
+        const schema = document.createElement('script');
+        schema.id = "eseb-google-schema";
+        schema.type = 'application/ld+json';
+        schema.text = JSON.stringify({{
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "DONABICO MEDIA SYSTEM RESEARCH | High-Density Neural System Architecture",
+            "url": "{ctx['domain']}/",
+            "author": {{
+                "@type": "Organization",
+                "name": "DONABICO MEDIA SYSTEM",
+                "url": "https://donabico.com/"
+            }},
+            "publisher": {{
+                "@type": "Organization",
+                "name": "DONABICO MEDIA SYSTEM"
+            }},
+            "mainEntityOfPage": "{ctx['domain']}/",
+            "datePublished": "2026-11-02",
+            "dateModified": "2026-11-02"
+        }});
+        document.getElementsByTagName('head')[0].appendChild(schema);
+    }}
+
+    console.log("%c[{ctx['stamp']}] [GOOGLE_SYSTEM_READY] Client Living Pulse Active | Target: {ctx['domain']}/", "color: #00ff00; font-weight: bold;");
+
+    setInterval(() => {{
+        console.log(JSON.stringify({{
+            pulse: "LIVE",
+            module: "GoogleIndexBroadcast",
+            stamp: "{ctx['stamp']}",
+            anchor: "{ctx['anchor']}",
+            domain: "{ctx['domain']}/",
+            entropy: "0.00000000000000"
+        }}));
+    }}, 2500);
+}})();
+"""
+    with open("Protocols/GoogleIndexBroadcast.ehc", "w", encoding="utf-8") as f:
+        f.write(ehc_content)
+
+    # 4. Sinh Serverless Runner Engine (.js) - Ping Googlebot API Server-to-Server
+    js_content = f"""/* ESEB GOOGLE INDEXING RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
 
@@ -72,7 +129,8 @@ const CONFIG = {{
     sitemap: "{ctx['domain']}/sitemap.xml"
 }};
 
-console.log(`[${{CONFIG.stamp}}] STARTING GOOGLE SITEMAP PING...`);
+console.log(`[${{CONFIG.stamp}}] STARTING GOOGLE SITEMAP PING ENGINE...`);
+console.log(`--> Target: ${{CONFIG.domain}}/`);
 
 const pingUrl = `https://www.google.com/ping?sitemap=${{encodeURIComponent(CONFIG.sitemap)}}`;
 const parsedUrl = new URL(pingUrl);
@@ -88,7 +146,7 @@ const options = {{
 }};
 
 const req = https.request(options, (res) => {{
-    console.log(`[${{CONFIG.stamp}}] GOOGLE PING RESPONSE STATUS: ${{res.statusCode}}`);
+    console.log(`[${{CONFIG.stamp}}] GOOGLE SITEMAP PING STATUS: ${{res.statusCode}}`);
     process.exit(0);
 }});
 
@@ -98,14 +156,13 @@ req.on('error', (e) => {{
 }});
 
 req.end();
-
 setTimeout(() => process.exit(0), 4000);
 """
     with open("Protocols/GoogleIndexBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
 
-    print(f"[{ctx['stamp']}] GOOGLE INDEX ARTIFACTS GENERATED SUCCESSFULLY")
+    print(f"[{ctx['stamp']}] DUAL OUTPUT GENERATED: GoogleIndexBroadcast.ehc & GoogleIndexBroadcast.js")
 
 if __name__ == "__main__":
     context = auto_discover_context()
-    generate_google_seo_artifacts(context)
+    generate_google_artifacts(context)
