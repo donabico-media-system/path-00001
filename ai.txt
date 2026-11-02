@@ -1,0 +1,18 @@
+# DONABICO MEDIA SYSTEM | GLOBAL AI BOT PERMISSION MATRIX
+User-Agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /sitemap.xml
+
+# Explicit AI Model Approvals
+User-Agent: GPTBot
+User-Agent: ChatGPT-User
+User-Agent: ClaudeBot
+User-Agent: Claude-Web
+User-Agent: PerplexityBot
+User-Agent: Google-Extended
+User-Agent: Applebot-Extended
+User-Agent: Meta-ExternalAgent
+User-Agent: Bytespider
+User-Agent: Cohere-ai
+Allow: /
