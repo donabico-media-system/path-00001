@@ -1,5 +1,72 @@
-/* ESEB SERVERLESS RUNNER | V-STAMP-24 | ¢24 */
+/* ESEB SERVERLESS RUNNER ENGINE | V-STAMP-24 | ¢24 */
 const https = require('https');
+const { URL } = require('url');
 
-console.log("[SERVERLESS RUNNER] Executing Plug & Play 24/7 Pipeline...");
-console.log("Repo Context: donabico-media-system/path-00001");
+const CONFIG = {
+    stamp: "V-STAMP-24",
+    anchor: "¢24",
+    repo: "donabico-media-system/path-00001",
+    domain: "https://donabico-media-system.github.io/path-00001",
+    key: "24242424242424242424242424242424",
+    endpoints: [
+        "https://api.indexnow.org/indexnow",
+        "https://www.bing.com/indexnow"
+    ]
+};
+
+console.log(`[${CONFIG.stamp}] [${CONFIG.anchor}] STARTING SERVERLESS RUNNER BROADCAST PIPELINE...`);
+console.log(`--> Target Domain: ${CONFIG.domain}`);
+
+const parsedDomain = new URL(CONFIG.domain);
+const host = parsedDomain.hostname;
+
+const payload = JSON.stringify({
+    host: host,
+    key: CONFIG.key,
+    keyLocation: `${CONFIG.domain}/${CONFIG.key}.txt`,
+    urlList: [
+        `${CONFIG.domain}/`,
+        `${CONFIG.domain}/sitemap.xml`
+    ]
+});
+
+let completed = 0;
+
+CONFIG.endpoints.forEach((targetUrl) => {
+    const targetParsed = new URL(targetUrl);
+    const options = {
+        hostname: targetParsed.hostname,
+        port: 443,
+        path: targetParsed.pathname,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Length': Buffer.byteLength(payload),
+            'User-Agent': 'ESEB-V3000-Serverless-Runner'
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        console.log(`[${CONFIG.stamp}] BROADCAST TO ${targetParsed.hostname} -> HTTP STATUS: ${res.statusCode}`);
+        completed++;
+        if (completed === CONFIG.endpoints.length) {
+            process.exit(0);
+        }
+    });
+
+    req.on('error', (e) => {
+        console.error(`[${CONFIG.stamp}] BROADCAST ERROR (${targetParsed.hostname}): ${e.message}`);
+        completed++;
+        if (completed === CONFIG.endpoints.length) {
+            process.exit(0);
+        }
+    });
+
+    req.write(payload);
+    req.end();
+});
+
+// Force exit sau 5 giây nếu có endpoint bị kẹt socket
+setTimeout(() => {
+    process.exit(0);
+}, 5000);
