@@ -55,7 +55,7 @@ def generate_dual_outputs(ctx):
     with open("Protocols/IndexNowBroadcast.ehc", "w", encoding="utf-8") as f:
         f.write(ehc_content)
 
-    # 2. Sinh Serverless Runner Engine (.js) - Chuẩn ES6
+    # 2. Sinh Serverless Runner Engine (.js) - Thêm Tự Đóng Tiến Trình (Auto Exit)
     js_content = f"""/* ESEB SERVERLESS RUNNER ENGINE | {ctx['stamp']} | {ctx['anchor']} */
 const https = require('https');
 const {{ URL }} = require('url');
@@ -68,8 +68,7 @@ const CONFIG = {{
     key: "24242424242424242424242424242424",
     endpoints: [
         "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow",
-        "https://yandex.com/indexnow"
+        "https://www.bing.com/indexnow"
     ]
 }};
 
@@ -89,6 +88,8 @@ const payload = JSON.stringify({{
     ]
 }});
 
+let completed = 0;
+
 CONFIG.endpoints.forEach((targetUrl) => {{
     const targetParsed = new URL(targetUrl);
     const options = {{
@@ -105,15 +106,28 @@ CONFIG.endpoints.forEach((targetUrl) => {{
 
     const req = https.request(options, (res) => {{
         console.log(`[${{CONFIG.stamp}}] BROADCAST TO ${{targetParsed.hostname}} -> HTTP STATUS: ${{res.statusCode}}`);
+        completed++;
+        if (completed === CONFIG.endpoints.length) {{
+            process.exit(0);
+        }}
     }});
 
     req.on('error', (e) => {{
         console.error(`[${{CONFIG.stamp}}] BROADCAST ERROR (${{targetParsed.hostname}}): ${{e.message}}`);
+        completed++;
+        if (completed === CONFIG.endpoints.length) {{
+            process.exit(0);
+        }}
     }});
 
     req.write(payload);
     req.end();
 }});
+
+// Force exit sau 5 giây nếu có endpoint bị kẹt socket
+setTimeout(() => {{
+    process.exit(0);
+}}, 5000);
 """
     with open("Protocols/IndexNowBroadcast.js", "w", encoding="utf-8") as f:
         f.write(js_content)
