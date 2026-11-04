@@ -1,2 +1,0 @@
-# DONABICO MEDIA SYSTEM | Target: https://path-00001.donabico.com/path-00001/
-Sitemap: https://path-00001.donabico.com/path-00001/sitemap.xml
