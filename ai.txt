@@ -1,3 +1,0 @@
-User-Agent: *
-Allow: /
-Sitemap: https://path-00001.donabico.com/path-00001/sitemap.xml
