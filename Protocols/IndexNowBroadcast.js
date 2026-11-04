@@ -10,7 +10,7 @@ const CONFIG = {
     key: "24242424242424242424242424242424",
     endpoints: [
         "https://api.indexnow.org/indexnow",
-        "https://bing.com"
+        "https://www.bing.com/indexnow"
     ]
 };
 
