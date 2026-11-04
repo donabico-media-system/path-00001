@@ -6,7 +6,7 @@ const CONFIG = {
     stamp: "V-STAMP-24",
     anchor: "¢24",
     repo: "donabico-media-system/path-00001",
-    domain: "https://donabico.com/path-00001",
+    domain: "https://path-00001.donabico.com/path-00001",
     key: "24242424242424242424242424242424",
     endpoints: [
         "https://api.indexnow.org/indexnow",
