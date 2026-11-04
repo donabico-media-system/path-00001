@@ -5,7 +5,7 @@ const { URL } = require('url');
 const CONFIG = {
     stamp: "V-STAMP-24",
     anchor: "¢24",
-    domain: "https://donabico.com/path-00001"
+    domain: "https://path-00001.donabico.com/path-00001"
 };
 
 console.log(`[${CONFIG.stamp}] STARTING GLOBAL AI BOT SIPHON BROADCAST...`);
