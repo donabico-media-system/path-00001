@@ -88,7 +88,6 @@ const CONFIG = {{
     endpoints: [
         "https://api.indexnow.org/indexnow",
         "https://bing.com"
-        "https://google.com"
     ]
 }};
 
