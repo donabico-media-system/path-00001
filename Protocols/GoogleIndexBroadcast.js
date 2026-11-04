@@ -5,8 +5,8 @@ const { URL } = require('url');
 const CONFIG = {
     stamp: "V-STAMP-24",
     anchor: "¢24",
-    domain: "https://donabico.com/path-00001",
-    sitemap: "https://donabico.com/path-00001/sitemap.xml"
+    domain: "https://path-00001.donabico.com/path-00001",
+    sitemap: "https://path-00001.donabico.com/path-00001/sitemap.xml"
 };
 
 console.log(`[${CONFIG.stamp}] STARTING GOOGLE SITEMAP PING ENGINE...`);
