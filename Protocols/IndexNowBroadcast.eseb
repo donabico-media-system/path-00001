@@ -87,7 +87,7 @@ const CONFIG = {{
     key: "{key_val}",
     endpoints: [
         "https://api.indexnow.org/indexnow",
-        "https://bing.com"
+        "https://www.bing.com/indexnow"
     ]
 }};
 
