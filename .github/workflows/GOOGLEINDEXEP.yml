@@ -1,0 +1,45 @@
+name: GOOGLEINDEXEP
+
+on:
+  push:
+    paths:
+      - 'Protocols/GoogleIndexEp.eseb'
+  schedule:
+    - cron: '0 */4 * * *'  # Chạy tự động mỗi 4 tiếng
+  workflow_dispatch:        # Nút bấm kích hoạt thủ công
+
+jobs:
+  build-and-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute ESEB Master Compiler (.eseb -> .ehc & .js)
+        run: |
+          python Protocols/GoogleIndexEp.eseb
+
+      - name: Run Serverless Runner Engine (.js)
+        run: |
+          node Protocols/GoogleIndexEp.js
+
+      - name: Commit & Push Generated Entity Bridges & Sitemap
+        run: |
+          git config --global user.name "donabico-media-system"
+          git config --global user.email "bot@donabico-media-system"
+          git add Protocols/GoogleIndexEp.ehc Protocols/GoogleIndexEp.js sitemap.xml robots.txt
+          git diff-index --quiet HEAD || git commit -m "[ESEB V3000-Ω] Auto-Generated Dual Engine & Sitemap [V-STAMP-24]"
+          git push
