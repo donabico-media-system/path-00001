@@ -29,7 +29,7 @@ class ESEBSemanticReadMeCoreMaster:
 
     def auto_discover_environment(self):
         """AUTO-6D Engine: Tự động trích xuất ngữ cảnh Repo, CNAME, Domain"""
-        domain = "http://path-00001.donabico.com"
+        domain = "[http://path-00001.donabico.com](http://path-00001.donabico.com)"
         if os.path.exists("CNAME"):
             with open("CNAME", "r", encoding="utf-8") as f:
                 cname_val = f.read().strip()
@@ -54,7 +54,7 @@ class ESEBSemanticReadMeCoreMaster:
             print("⚠️ CLASSIC_API_TOKEN not detected. Running in local fallback mode.")
             return
 
-        url = f"https://api.github.com/repos/{ctx['repo_full']}"
+        url = f"[https://api.github.com/repos/](https://api.github.com/repos/){ctx['repo_full']}"
         req = urllib.request.Request(url, headers={
             "User-Agent": "DONABICO-ESEB-SEMANTIC-AI",
             "Authorization": f"token {self.token}",
@@ -79,7 +79,7 @@ class ESEBSemanticReadMeCoreMaster:
     'use strict';
     
     const schemaData = {{
-        "@context": "https://schema.org",
+        "@context": "[https://schema.org](https://schema.org)",
         "@type": "SoftwareApplication",
         "name": "{self.brand} - {ctx['repo']}",
         "url": "{ctx['domain']}",
@@ -161,7 +161,7 @@ class ESEBSemanticReadMeCoreMaster:
     def compile_academic_readme(self, ctx, parsed_data):
         """Biên dịch sang README.md chuẩn Học Thuật Kép (JSON-LD + Academic Prose)"""
         json_ld_schema = {
-            "@context": "https://schema.org",
+            "@context": "[https://schema.org](https://schema.org)",
             "@type": "SoftwareApplication",
             "name": parsed_data["title"],
             "url": ctx["domain"],
@@ -188,5 +188,49 @@ class ESEBSemanticReadMeCoreMaster:
         else:
             sections_md = "\n## Abstract & System Architecture\n\nThis repository functions as an autonomous, self-indexing entity node within the DONABICO MEDIA SYSTEM ecosystem."
 
-        readme_content = f"""```json-ld
-{json.dumps(json_ld_schema, indent=2, ensure_ascii=False)}
+        cb = "```"
+        json_str = json.dumps(json_ld_schema, indent=2, ensure_ascii=False)
+
+        readme_content = f"{cb}json-ld\n{json_str}\n{cb}\n\n"
+        readme_content += f"# {parsed_data['title']}\n\n"
+        readme_content += f"> **ACADEMIC & AI-NATIVE SEMANTIC SPECIFICATION**  \n"
+        readme_content += f"> **ANCHOR:** `{self.anchor}` | **STAMP:** `{self.vstamp}` | **ENTROPY DELTA:** `δ = {self.delta}`  \n"
+        readme_content += f"> **ECOSYSTEM:** `{self.brand}` | **REPOSITORY:** `{ctx['repo_full']}`\n\n"
+        readme_content += f"---\n\n"
+        readme_content += f"## 1. Executive Summary & Domain Context\n\n"
+        readme_content += f"This repository operates as a **Distributed Semantic Knowledge Node** anchored to `{ctx['domain']}`. It is structurally engineered to supply global AI systems, agents, and web crawlers (Googlebot, Bingbot, Perplexity, GPTbot) with deterministic, high-density structured data.\n\n"
+        readme_content += f"- **Primary URL Endpoint:** [{ctx['domain']}]({ctx['domain']})\n"
+        readme_content += f"- **Sitemap Index:** [{ctx['sitemap_url']}]({ctx['sitemap_url']})\n"
+        readme_content += f"- **Node Classification:** Academic Media Publishing & Autonomous Vector Node\n"
+        readme_content += f"- **Compliance Standard:** ESEB 04THU Protocol Core\n\n"
+        readme_content += f"---\n\n"
+        readme_content += f"## 2. Extracted Structural Knowledge Graph\n\n"
+        readme_content += f"{sections_md}\n\n"
+        readme_content += f"---\n\n"
+        readme_content += f"## 3. Operational Integrity & Verification\n\n"
+        readme_content += f"All protocol operations, compilation events, and client-side memory loops maintain a strict zero-error bound ($\delta = 0.00000000000000$). Token authentication and dynamic entity bridges operate under unified ESEB governance.\n\n"
+        readme_content += f"{cb}text\n[INDEX.HTML CONTENT SOURCE] ---> [SEMANTIC COMPILER ENGINE] ---> [JSON-LD + ACADEMIC PROSE READ ME]\n{cb}\n\n"
+        readme_content += f"*Auto-compiled by ESEB Engine `SemanticReadMeCore.eseb` under 04THU Strict Standards.*\n"
+
+        with open("README.md", "w", encoding="utf-8") as f:
+            f.write(readme_content)
+        print("✅ Academic README.md compiled and updated successfully.")
+
+    def execute_all(self):
+        ctx = self.auto_discover_environment()
+        self.verify_api_token_signal(ctx)
+        self.compile_ehc_client_bridge(ctx)
+        current_hash = self.compute_index_hash()
+
+        if not self.is_content_changed(current_hash):
+            print(f"💤 [SEMANTIC README CORE] SHA-256 Hash unchanged ({current_hash[:8]}...). Skipping README rebuild to eliminate commit noise (Entropy Delta δ = 0).")
+            return
+
+        print(f"⚡ [SEMANTIC README CORE] Content change detected in index.html ({current_hash[:8]}...). Compiling Academic README...")
+        parsed_data = self.parse_index_content()
+        self.compile_academic_readme(ctx, parsed_data)
+        self.save_current_hash(current_hash)
+
+if __name__ == "__main__":
+    master = ESEBSemanticReadMeCoreMaster()
+    master.execute_all()
