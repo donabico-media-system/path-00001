@@ -1,0 +1,36 @@
+/**
+ * ESEB DYNAMIC LIVING CLIENT ENGINE - SemanticReadMeCore.ehc
+ * DYNAMIC SEMANTIC JSON-LD INJECTOR FOR AI CRAWLERS
+ * STAMP: V-STAMP-24 | ANCHOR: ¢24 | DELTA: 0.00000000000000
+ * 100% HARD-LOGIC THỰC CHIẾN (0% SIMULATION)
+ */
+(function() {
+    'use strict';
+    
+    const schemaData = {
+        "@context": "[https://schema.org](https://schema.org)",
+        "@type": "SoftwareApplication",
+        "name": "DONABICO MEDIA SYSTEM - path-00001",
+        "url": "https://path-00001.donabico.com",
+        "applicationCategory": "Distributed Semantic Knowledge Node",
+        "operatingSystem": "WebAssembly / ESEB Runtime",
+        "provider": {
+            "@type": "Organization",
+            "name": "DONABICO MEDIA SYSTEM",
+            "url": "https://path-00001.donabico.com"
+        },
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "ESEB_ANCHOR",
+            "value": "¢24"
+        }
+    };
+
+    const scriptNode = document.createElement('script');
+    scriptNode.type = 'application/ld+json';
+    scriptNode.id = 'ESEB-DynamicSemanticSchema';
+    scriptNode.text = JSON.stringify(schemaData);
+    document.head.appendChild(scriptNode);
+
+    console.log("%c 📚 [SEMANTIC README CORE .EHC] DYNAMIC JSON-LD INJECTED | ANCHOR: ¢24", "color: #00ff88; font-weight: bold; background: #000; padding: 4px 8px; border: 1px solid #00ff88;");
+})();

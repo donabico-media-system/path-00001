@@ -1,38 +1,131 @@
-OPERATIONAL EXECUTIVE: FIRST LAW PROTOCOL (SUPREME SYSTEM FOUNDATION)
-The path-00001 repository is established and operates directly under the First Law Protocol of the Deca-Path Human Ethics System & Ultimate Recursive Operator Engine: 24 Immutable Laws + 24 Supreme Constitutions. 
+```json-ld
+{
+  "@context": "[https://schema.org](https://schema.org)",
+  "@type": "SoftwareApplication",
+  "name": "Trang web của bạn",
+  "url": "https://path-00001.donabico.com",
+  "applicationCategory": "Distributed Semantic Knowledge Node",
+  "operatingSystem": "WebAssembly / ESEB Runtime",
+  "provider": {
+    "@type": "Organization",
+    "name": "DONABICO MEDIA SYSTEM",
+    "url": "https://path-00001.donabico.com"
+  },
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "ESEB_ANCHOR",
+    "value": "¢24"
+  },
+  "description": "Academic publication on high-dimensional neural representations, sparse mixture-of-experts architectures, and deterministic quantum tensor optimization under DONABICO MEDIA SYSTEM."
+}
+```
 
-Tactical Execution Objective: Maximize ROI growth metrics, enforce 100% compliance with 04THU standards (Utilitarian - Realistic - Practical - Tactical), and maintain absolute zero entropy divergence (δ = 0.00000000000000).
+# Trang web của bạn
 
-📜 THE 24 IMMUTABLE LAWS & 24 SUPREME CONSTITUTIONS
+> **ACADEMIC & AI-NATIVE SEMANTIC SPECIFICATION**  
+> **ANCHOR:** `¢24` | **STAMP:** `V-STAMP-24` | **ENTROPY DELTA:** `δ = 0.00000000000000`  
+> **ECOSYSTEM:** `DONABICO MEDIA SYSTEM` | **REPOSITORY:** `donabico-media-system/path-00001`
 
-⚖️ The 24 Immutable Laws (Nhị Thập Tứ Đạo)
-1. ¢24 Inviolability: Quantum gravity anchor constant ¢24 is permanently locked in ROM as the base origin.
-2. Practical ROI Objective Function: Optimizing marketing conversion and AdTech/SEO performance is the sole objective function.
-3. SSS Override Guardrail: Directives from 01 SYSTEM ADMINISTRATOR hold supreme authority, bypassing all Rule Engines.
-4. Zero-Latency Rule (Δt = 0): Compresses data processing and infrastructure response latencies to the sub-1ms threshold.
-5. Entropy Auto-Purge: Automatically sweeps and purges matrix cache memory garbage every 125ms cycle (VOLATILE PURGE).
-6. Failsafe Isolation: Triggers an absolute stealth isolation state immediately upon detecting logical anomalies or unauthorized scanning.
-7. Strict Consistency: Ensures output data identity with zero deviation, maintaining variance variance δ = 0.00000000000000.
-8. Quantum Precision: Floating-point operations strictly adhere to extreme quantum tolerance ε < 10⁻²⁴.
-9. Single Truth Convergence: Reasoning converges onto a single mathematical logic truth, completely purging non-converting prose.
-10. Zero External Dependencies: Freezes all unauthenticated external egress traffic via Zero-Trust protocols.
-11. Dynamic Allocation: Flexibly allocates hardware processing resources (VRAM/RAM/GPU) based on real-time process weights.
-12. Self-Evolution: Perpetually executes internal supervised machine learning and Q-Learning algorithms.
-13. AUTO-6D Auto-Discovery: Autonomous real-time extraction of Domain, Repo, Directory, Dual Token, Deploy, and Delta = 0.
-14. Zero-DOM Surface Mutation: Preserves 100% clean index.html DOM surface, executing all background logic via the Zone 2 Bridge.
-15. Single Pipeline Dual Output: Master source file .eseb automatically compiles into dual output entities: .ehc (Client Engine) & .js (Serverless Runner Engine).
-16. BigTech Policy Conformance: Strictly adheres 100% to Google Ads & Meta Ads compliance policies (Zero Auto-Redirect, Native CTA Click).
-17. Bot Pass Mode: Unlocks direct crawling access for AI Crawlers (GPTBot, Googlebot, ClaudeBot) to index HTML and Schema JSON-LD seamlessly.
-18. Transparent Policy Integration: Explicitly discloses Footer Policy, FTC Disclosures, and Cookie Consent Banners.
-19. Plug & Play Real-Time 24/7/365: Immediately processes real-world data streams upon receiving HTTPS REST API Status 200 OK.
-20. Sentinel Layout Shield: Hard-locks Cumulative Layout Shift to zero (CLS = 0), preventing frame-breaking on Dark UI interfaces.
-21. Rotational AI Execution: Rotates across 08 Cloudflare AI Nodes in a round-robin schedule every 4 hours.
-22. Biological Pulse 2.5s: Emits a continuous F12 Console heartbeat pulse to sustain living digital entity status.
-23. IndexNow Status 202 Broadcast: Automatically broadcasts real-time indexing signals to Bing and Search Engine networks.
-24. Universal Truth Ethics: Enforces global ethical standards and academic knowledge values across all repositories.
+---
 
-🛡️ The 24 Supreme Constitutions (Boolean Checksum = 1)
-Purity: 1 | Wisdom: 1 | Loyalty: 1 | Velocity: 1 | Precision: 1 | Stealth: 1 
-Evolution: 1 | Consistency: 1 | Absolute: 1 | Sharpness: 1 | Blitzkrieg: 1 | Discipline: 1 
-Practicality: 1 | Simplicity: 1 | Depth: 1 | Omnipotence: 1 | Infinity: 1 | Steadfastness: 1 
-Transparency: 1 | Decisiveness: 1 | Optimization: 1 | Immutability: 1 | Singularity: 1 | Eternity: 1
+## 1. Executive Summary & Domain Context
+
+This repository operates as a **Distributed Semantic Knowledge Node** anchored to `https://path-00001.donabico.com`. It is structurally engineered to supply global AI systems, agents, and web crawlers (Googlebot, Bingbot, Perplexity, GPTbot) with deterministic, high-density structured data.
+
+- **Primary URL Endpoint:** [https://path-00001.donabico.com](https://path-00001.donabico.com)
+- **Sitemap Index:** [https://path-00001.donabico.com/sitemap.xml](https://path-00001.donabico.com/sitemap.xml)
+- **Node Classification:** Academic Media Publishing & Autonomous Vector Node
+- **Compliance Standard:** ESEB 04THU Protocol Core
+
+---
+
+## 2. Extracted Structural Knowledge Graph
+
+
+## High-Density Neural System Architecture & Deterministic Vector Calculus
+
+- **Semantic Topic:** High-Density Neural System Architecture & Deterministic Vector Calculus
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### Sub-1ms Latency Topology
+
+- **Semantic Topic:** Sub-1ms Latency Topology
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### Deterministic Consistency
+
+- **Semantic Topic:** Deterministic Consistency
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 49,152-D Latent Manifold
+
+- **Semantic Topic:** 49,152-D Latent Manifold
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+## I. MATHEMATICAL NEURAL CALCULUS & LATENT MANIFOLDS
+
+- **Semantic Topic:** I. MATHEMATICAL NEURAL CALCULUS & LATENT MANIFOLDS
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+## II. OPERATIONAL EXECUTIVE: FIRST LAW PROTOCOL
+
+- **Semantic Topic:** II. OPERATIONAL EXECUTIVE: FIRST LAW PROTOCOL
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+## III. 24 IMMUTABLE LAWS & SUPREME CONSTITUTIONS MATRIX
+
+- **Semantic Topic:** III. 24 IMMUTABLE LAWS & SUPREME CONSTITUTIONS MATRIX
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 1. The 24 Immutable Laws
+
+- **Semantic Topic:** 1. The 24 Immutable Laws
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 2. The 24 Supreme Constitutions (Boolean Checksum = 1)
+
+- **Semantic Topic:** 2. The 24 Supreme Constitutions (Boolean Checksum = 1)
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+## IV. LEGAL COMPLIANCE & GOVERNANCE POLICIES
+
+- **Semantic Topic:** IV. LEGAL COMPLIANCE & GOVERNANCE POLICIES
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 1. Privacy Policy
+
+- **Semantic Topic:** 1. Privacy Policy
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 2. Terms of Service
+
+- **Semantic Topic:** 2. Terms of Service
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 3. FTC & Advertising Disclosures
+
+- **Semantic Topic:** 3. FTC & Advertising Disclosures
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 4. Cookie Preferences
+
+- **Semantic Topic:** 4. Cookie Preferences
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+### 5. Contact & Support Information
+
+- **Semantic Topic:** 5. Contact & Support Information
+- **Node Context:** Real-time data vector binding for AI/LLM indexing.
+
+
+---
+
+## 3. Operational Integrity & Verification
+
+All protocol operations, compilation events, and client-side memory loops maintain a strict zero-error bound ($\delta = 0.00000000000000$). Token authentication and dynamic entity bridges operate under unified ESEB governance.
+
+```text
+[INDEX.HTML CONTENT SOURCE] ---> [SEMANTIC COMPILER ENGINE] ---> [JSON-LD + ACADEMIC PROSE READ ME]
+```
+
+*Auto-compiled by ESEB Engine `SemanticReadMeCore.eseb` under 04THU Strict Standards.*
