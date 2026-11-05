@@ -6,4 +6,13 @@ Disallow: /.github/
 User-agent: Googlebot
 Allow: /
 
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 Sitemap: https://path-00001.donabico.com/sitemap.xml
