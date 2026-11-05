@@ -29,7 +29,7 @@ class ESEBSemanticReadMeCoreMaster:
 
     def auto_discover_environment(self):
         """AUTO-6D Engine: Tự động trích xuất ngữ cảnh Repo, CNAME, Domain"""
-        domain = "[http://path-00001.donabico.com](http://path-00001.donabico.com)"
+        domain = "http://path-00001.donabico.com"
         if os.path.exists("CNAME"):
             with open("CNAME", "r", encoding="utf-8") as f:
                 cname_val = f.read().strip()
@@ -54,7 +54,7 @@ class ESEBSemanticReadMeCoreMaster:
             print("⚠️ CLASSIC_API_TOKEN not detected. Running in local fallback mode.")
             return
 
-        url = f"[https://api.github.com/repos/](https://api.github.com/repos/){ctx['repo_full']}"
+        url = f"https://api.github.com/repos/{ctx['repo_full']}"
         req = urllib.request.Request(url, headers={
             "User-Agent": "DONABICO-ESEB-SEMANTIC-AI",
             "Authorization": f"token {self.token}",
@@ -68,7 +68,7 @@ class ESEBSemanticReadMeCoreMaster:
             print(f"⚠️ Token API Signal check notice: {e}")
 
     def compile_ehc_client_bridge(self, ctx):
-        """Biên dịch ra Protocols/SemanticReadMeCore.ehc (Tự nạp Dynamic JSON-LD vào DOM)"""
+        """Biên dịch ra Protocols/SemanticReadMeCore.ehc (Dynamic Schema Injector)"""
         ehc_content = f"""/**
  * ESEB DYNAMIC LIVING CLIENT ENGINE - {self.module_name}.ehc
  * DYNAMIC SEMANTIC JSON-LD INJECTOR FOR AI CRAWLERS
@@ -78,8 +78,11 @@ class ESEBSemanticReadMeCoreMaster:
 (function() {{
     'use strict';
     
+    const bridgeScript = document.getElementById('{self.module_name}-Bridge');
+    const activeModule = bridgeScript ? bridgeScript.getAttribute('data-module') : '{self.module_name}';
+
     const schemaData = {{
-        "@context": "[https://schema.org](https://schema.org)",
+        "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "{self.brand} - {ctx['repo']}",
         "url": "{ctx['domain']}",
@@ -103,7 +106,7 @@ class ESEBSemanticReadMeCoreMaster:
     scriptNode.text = JSON.stringify(schemaData);
     document.head.appendChild(scriptNode);
 
-    console.log("%c 📚 [SEMANTIC README CORE .EHC] DYNAMIC JSON-LD INJECTED | ANCHOR: {self.anchor}", "color: #00ff88; font-weight: bold; background: #000; padding: 4px 8px; border: 1px solid #00ff88;");
+    console.log("%c 📚 [SEMANTIC README CORE .EHC] BOUND TO MODULE: " + activeModule + " | ANCHOR: {self.anchor}", "color: #00ff88; font-weight: bold; background: #000; padding: 4px 8px; border: 1px solid #00ff88;");
 }})();
 """
         os.makedirs("Protocols", exist_ok=True)
@@ -161,7 +164,7 @@ class ESEBSemanticReadMeCoreMaster:
     def compile_academic_readme(self, ctx, parsed_data):
         """Biên dịch sang README.md chuẩn Học Thuật Kép (JSON-LD + Academic Prose)"""
         json_ld_schema = {
-            "@context": "[https://schema.org](https://schema.org)",
+            "@context": "https://schema.org",
             "@type": "SoftwareApplication",
             "name": parsed_data["title"],
             "url": ctx["domain"],
