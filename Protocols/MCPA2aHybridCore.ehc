@@ -24,7 +24,7 @@
                 repo: CONFIG.repo,
                 anchor: CONFIG.anchor,
                 vstamp: CONFIG.vstamp,
-                toolsAvailable: ['SEO_INDEX', 'CDN_PURGE', 'Q_LEARNING', 'A2A_PING']
+                toolsAvailable: ['CDN_PURGE', 'Q_LEARNING', 'A2A_PEER_SYNC']
             };
         }
         getContext() { return JSON.stringify(this.contextStore); }
