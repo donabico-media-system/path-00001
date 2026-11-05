@@ -86,13 +86,13 @@ function broadcastIndexing(attempt = 1) {
 
 async function run() {
     await broadcastCDN();
-    console.log("⏳ Waiting 15 seconds for CDN Edge Deployment & Key Propagation...");
-    await delay(15000);
+    console.log("⏳ Waiting 45 seconds for GitHub Pages Static Build & CDN Propagation...");
+    await delay(45000);
     
     let status = await broadcastIndexing(1);
     if (status === 403) {
-        console.log("⚠️ IndexNow returned 403. CDN propagation pending. Retrying in 15 seconds...");
-        await delay(15000);
+        console.log("⚠️ IndexNow returned 403. Retrying in 20 seconds...");
+        await delay(20000);
         await broadcastIndexing(2);
     }
     
