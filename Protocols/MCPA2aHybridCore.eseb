@@ -3,7 +3,7 @@
 """
 ================================================================================
 ESEB DYNAMIC LIVING ENGINE V3000-Ω | UNIFIED HYBRID CORE PROTOCOL
-MODULE: MCP + A2A HYBRID ENGINE (SUPER SMART INTELLIGENT MODE)
+MODULE: MCP + A2A HYBRID ENGINE (STRICT 200/202 & ENHANCED CDN WAIT)
 FILE: Protocols/MCPA2aHybridCore.eseb
 STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY DELTA = 0.00000000000000
 BRAND: DONABICO MEDIA SYSTEM | COMPLIANCE: 04THU (100% THỰC CHIẾN)
@@ -189,7 +189,7 @@ class ESEBMCPA2aHybridCoreMaster:
         print(f"✅ Compiled Hybrid Client Engine -> Protocols/{self.module_name}.ehc")
 
     def compile_js_runner_engine(self, ctx):
-        """Biên dịch ra Protocols/MCPA2aHybridCore.js (Serverless Runner Engine - CLASSIC_API_TOKEN Direct)"""
+        """Biên dịch ra Protocols/MCPA2aHybridCore.js (Serverless Runner Engine - Enhanced CDN Wait)"""
         js_content = f"""/**
  * ESEB SERVERLESS RUNNER ENGINE - {self.module_name}.js
  * MCP + A2A HYBRID SERVERLESS ORCHESTRATOR
@@ -278,13 +278,13 @@ function broadcastIndexing(attempt = 1) {{
 
 async function run() {{
     await broadcastCDN();
-    console.log("⏳ Waiting 15 seconds for CDN Edge Deployment & Key Propagation...");
-    await delay(15000);
+    console.log("⏳ Waiting 45 seconds for GitHub Pages Static Build & CDN Propagation...");
+    await delay(45000);
     
     let status = await broadcastIndexing(1);
     if (status === 403) {{
-        console.log("⚠️ IndexNow returned 403. CDN propagation pending. Retrying in 15 seconds...");
-        await delay(15000);
+        console.log("⚠️ IndexNow returned 403. Retrying in 20 seconds...");
+        await delay(20000);
         await broadcastIndexing(2);
     }}
     
