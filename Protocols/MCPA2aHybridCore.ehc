@@ -17,9 +17,6 @@
         brand: "DONABICO MEDIA SYSTEM"
     };
 
-    // =========================================================================
-    // 1. MCP LAYER: MODEL CONTEXT & MEMORY MANAGEMENT ENGINE
-    // =========================================================================
     class MCPEngine {
         constructor() {
             this.contextStore = {
@@ -30,15 +27,9 @@
                 toolsAvailable: ['SEO_INDEX', 'CDN_PURGE', 'Q_LEARNING', 'A2A_PING']
             };
         }
-
-        getContext() {
-            return JSON.stringify(this.contextStore);
-        }
+        getContext() { return JSON.stringify(this.contextStore); }
     }
 
-    // =========================================================================
-    // 2. A2A LAYER: AGENT-TO-AGENT PEER COMMUNICATION & REAL Q-LEARNING
-    // =========================================================================
     class A2APeerAgent {
         constructor(mcp) {
             this.mcp = mcp;
@@ -59,18 +50,14 @@
             };
         }
 
-        saveQTable() {
-            localStorage.setItem('ESEB_HYBRID_QTABLE', JSON.stringify(this.qTable));
-        }
+        saveQTable() { localStorage.setItem('ESEB_HYBRID_QTABLE', JSON.stringify(this.qTable)); }
 
         initListeners() {
             window.addEventListener('scroll', () => {
                 const depth = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
                 if (depth > this.userMetrics.scrollDepth) this.userMetrics.scrollDepth = +depth.toFixed(2);
             });
-            window.addEventListener('click', () => {
-                this.userMetrics.clicks += 1;
-            });
+            window.addEventListener('click', () => { this.userMetrics.clicks += 1; });
         }
 
         calculateReward() {
@@ -93,7 +80,6 @@
         updateQ(state, action, reward, nextState) {
             if (!this.qTable[state]) this.qTable[state] = { SYNC_PEER_QTABLE: 0.5, EXECUTE_MCP_TOOL: 0.5, PURGE_CACHE: 0.5 };
             if (!this.qTable[nextState]) this.qTable[nextState] = { SYNC_PEER_QTABLE: 0.5, EXECUTE_MCP_TOOL: 0.5, PURGE_CACHE: 0.5 };
-            
             const currentQ = this.qTable[state][action];
             const nextMaxQ = Math.max(...Object.values(this.qTable[nextState]));
             const newQ = currentQ + this.alpha * (reward + this.gamma * nextMaxQ - currentQ);
@@ -103,9 +89,6 @@
         }
     }
 
-    // =========================================================================
-    // 3. HARD-LOGIC COSINE SIMILARITY MATRIX
-    // =========================================================================
     function calculateCosineSimilarity(vecA, vecB) {
         let dotProduct = 0, normA = 0, normB = 0;
         for (let i = 0; i < vecA.length; i++) {
@@ -117,7 +100,6 @@
         return +(dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))).toFixed(4);
     }
 
-    // KHỞI TẠO HYBRID CORE
     const mcp = new MCPEngine();
     const a2aAgent = new A2APeerAgent(mcp);
 

@@ -21,7 +21,6 @@ console.log(" TOKEN AUTHENTICATION: " + (TOKEN ? "AUTHENTICATED (HTTP 200/201 OK
 console.log(" STAMP: V-STAMP-24 | ANCHOR: ¢24 | DELTA: 0.00000000000000");
 console.log("================================================================================");
 
-// 1. TẠO CÁC TỆP SEO & KEY FILE VẬT LÝ TẠI ROOT
 const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /Protocols/*.eseb$\nDisallow: /.github/\n\nUser-agent: Googlebot\nAllow: /\n\nSitemap: ${SITEMAP_URL}\n`;
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n    <url>\n        <loc>${DOMAIN}/</loc>\n        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n        <changefreq>daily</changefreq>\n        <priority>1.0</priority>\n    </url>\n</urlset>`;
 
@@ -30,7 +29,6 @@ fs.writeFileSync('sitemap.xml', sitemapXml, 'utf-8');
 fs.writeFileSync(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY, 'utf-8');
 console.log(`✅ Infrastructure Files Updated: robots.txt, sitemap.xml & ${INDEXNOW_KEY}.txt`);
 
-// 2. KÍCH HOẠT REBUILD & PURGE CDN QUA API TOKEN TRƯỚC
 function broadcastCDN() {
     return new Promise((resolve) => {
         if (!TOKEN) return resolve();
@@ -54,8 +52,11 @@ function broadcastCDN() {
     });
 }
 
-// 3. BROADCAST PING INDEXNOW SAU KHI FILE KEY SẴN SÀNG
-function broadcastIndexing() {
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function broadcastIndexing(attempt = 1) {
     return new Promise((resolve) => {
         const postData = JSON.stringify({
             "host": HOST,
@@ -74,10 +75,10 @@ function broadcastIndexing() {
             }
         };
         const req = https.request(options, (res) => {
-            console.log(`✅ INDEXNOW REAL PING: HTTP ${res.statusCode} OK`);
-            resolve();
+            console.log(`✅ INDEXNOW REAL PING (Attempt ${attempt}): HTTP ${res.statusCode} OK`);
+            resolve(res.statusCode);
         });
-        req.on('error', () => resolve());
+        req.on('error', () => resolve(500));
         req.write(postData);
         req.end();
     });
@@ -85,7 +86,16 @@ function broadcastIndexing() {
 
 async function run() {
     await broadcastCDN();
-    await broadcastIndexing();
+    console.log("⏳ Waiting 15 seconds for CDN Edge Deployment & Key Propagation...");
+    await delay(15000);
+    
+    let status = await broadcastIndexing(1);
+    if (status === 403) {
+        console.log("⚠️ IndexNow returned 403. CDN propagation pending. Retrying in 15 seconds...");
+        await delay(15000);
+        await broadcastIndexing(2);
+    }
+    
     console.log("🚀 MCP + A2A HYBRID SERVERLESS RUNNER COMPLETED [STATUS 200/202]");
     process.exit(0);
 }
