@@ -58,10 +58,10 @@ jobs:
           node Protocols/MCPA2aHybridCore.js
 
   # =========================================================================
-  # JOB 2: PHÁT TÍN HIỆU INDEXNOW (CHỈ CHẠY KHI JOB 1 HOÀN TẤT)
+  # JOB 2: PHÁT TÍN HIỆU INDEXNOW (ĐỜI CDN PROPAGATION -> HTTP 200/202 OK)
   # =========================================================================
   indexnow-broadcast:
-    needs: build-and-deploy   # RÀO CHẮN: Đợi Job 1 thành công mới kích hoạt Job 2
+    needs: build-and-deploy   # Đợi Job 1 thành công mới kích hoạt
     runs-on: ubuntu-latest
 
     steps:
@@ -72,6 +72,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Wait for GitHub Pages CDN Propagation
+        run: |
+          echo "⏳ Waiting 45 seconds for CDN Edge Deployment..."
+          sleep 45
 
       - name: Execute IndexNow Ping (Guaranteed HTTP 200/202 OK)
         run: |
@@ -105,12 +110,27 @@ jobs:
             }
           };
           
-          console.log("🚀 SENDING INDEXNOW MASTER BROADCAST FOR:", domain);
-          const req = https.request(options, (res) => {
-            console.log(`✅ INDEXNOW SIGNAL CONFIRMED: HTTP ${res.statusCode} OK`);
-            process.exit(res.statusCode === 200 || res.statusCode === 202 ? 0 : 1);
-          });
-          req.on("error", (e) => { console.error(e); process.exit(1); });
-          req.write(postData);
-          req.end();
+          function sendPing(attempt = 1) {
+            console.log(`🚀 SENDING INDEXNOW BROADCAST (Attempt ${attempt}) FOR: ${domain}`);
+            const req = https.request(options, (res) => {
+              console.log(`✅ INDEXNOW SIGNAL RESPONSE: HTTP ${res.statusCode}`);
+              if (res.statusCode === 200 || res.statusCode === 202) {
+                process.exit(0);
+              } else if (attempt < 2) {
+                console.log("⚠️ Received non-200 status. Retrying in 20 seconds...");
+                setTimeout(() => sendPing(2), 20000);
+              } else {
+                process.exit(1);
+              }
+            });
+            req.on("error", (e) => {
+              console.error(e);
+              if (attempt < 2) setTimeout(() => sendPing(2), 20000);
+              else process.exit(1);
+            });
+            req.write(postData);
+            req.end();
+          }
+
+          sendPing(1);
           '
