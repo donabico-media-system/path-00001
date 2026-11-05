@@ -20,7 +20,7 @@ jobs:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    # Lấy toàn bộ lịch sử commit hỗ trợ rebase mượt mà
+          fetch-depth: 0    # Lấy toàn bộ lịch sử commit để rebase mượt mà
 
       - name: Set up Python Environment
         uses: actions/setup-python@v5
@@ -36,7 +36,7 @@ jobs:
         run: |
           python Protocols/MCPA2aHybridCore.eseb
 
-      - name: Run MCP+A2A Serverless Engine with Dynamic CLASSIC_API_TOKEN
+      - name: Run MCP+A2A Serverless Engine with Direct CLASSIC_API_TOKEN
         env:
           CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
         run: |
