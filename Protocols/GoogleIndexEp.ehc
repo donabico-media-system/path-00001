@@ -31,8 +31,7 @@
             },
             "publisher": {
                 "@type": "Organization",
-                "name": CONFIG.brand,
-                "logo": CONFIG.domain + "/assets/logo.png"
+                "name": CONFIG.brand
             }
         };
         const script = document.createElement('script');
