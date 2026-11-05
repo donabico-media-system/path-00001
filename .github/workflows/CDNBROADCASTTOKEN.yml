@@ -5,8 +5,8 @@ on:
     paths:
       - 'Protocols/CdnBroadcastToken.eseb'
   schedule:
-    - cron: '0 */4 * * *'  # Chạy tự động mỗi 4 tiếng
-  workflow_dispatch:        # Kích hoạt thủ công
+    - cron: '0 */4 * * *'  # Tự động phát tín hiệu mỗi 4 tiếng
+  workflow_dispatch:        # Nút kích hoạt thủ công
 
 jobs:
   broadcast-cdn:
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # Lấy toàn bộ lịch sử commit hỗ trợ rebase mượt mạị
 
       - name: Set up Python Environment
         uses: actions/setup-python@v5
@@ -45,5 +47,9 @@ jobs:
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico-media-system"
           git add Protocols/CdnBroadcastToken.ehc Protocols/CdnBroadcastToken.js
-          git diff-index --quiet HEAD || git commit -m "[ESEB V3000-Ω] Auto-Broadcast CDN Token Engine [V-STAMP-24]"
-          git push
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "[ESEB V3000-Ω] Auto-Broadcast CDN Token Engine [V-STAMP-24]"
+            git fetch origin main
+            git rebase origin/main
+            git push origin main
+          fi
