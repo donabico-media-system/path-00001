@@ -1,0 +1,32 @@
+# ==============================================================================
+# DONABICO MEDIA SYSTEM - ESEB DYNAMIC LIVING SYSTEM V3000-Ω
+# TARGET DOMAIN: http://path-00001.donabico.com/
+# BOT PASS MODE: FULL ACCESS FOR SEARCH & AI CRAWLERS (BIGTECH COMPLIANT)
+# ==============================================================================
+
+User-agent: *
+Allow: /
+Disallow: /Protocols/*.eseb$
+Disallow: /.github/
+
+# AI Crawlers & BigTech Search Bots Explicit Access
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Sitemap Declaration
+Sitemap: http://path-00001.donabico.com/sitemap.xml
