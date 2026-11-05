@@ -3,13 +3,13 @@ name: GOOGLEINDEXEP
 on:
   push:
     paths:
-      - 'Protocols/GoogleIndexEpCore.eseb'
+      - 'Protocols/GoogleIndexEp.eseb'
   schedule:
-    - cron: '0 */6 * * *'  # Chạy tự động mỗi 6 tiếng
-  workflow_dispatch:        # Kích hoạt thủ công
+    - cron: '0 */4 * * *'  # Chạy tự động mỗi 4 tiếng
+  workflow_dispatch:        # Nút bấm kích hoạt thủ công
 
 jobs:
-  google-indexing-execution:
+  build-and-index:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -32,23 +32,23 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Execute ESEB Google Index Compiler (.eseb -> .ehc & .js)
+      - name: Execute ESEB Master Compiler (.eseb -> .ehc & .js)
         run: |
-          python Protocols/GoogleIndexEpCore.eseb
+          python Protocols/GoogleIndexEp.eseb
 
-      - name: Run Serverless Runner Engine with CLASSIC_API_TOKEN
+      - name: Run Serverless Runner Engine (.js) with CLASSIC_API_TOKEN
         env:
           CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
         run: |
-          node Protocols/GoogleIndexEpCore.js
+          node Protocols/GoogleIndexEp.js
 
       - name: Commit & Push Generated Entity Bridges & Sitemap (Safe Rebase)
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico-media-system"
-          git add Protocols/GoogleIndexEpCore.ehc Protocols/GoogleIndexEpCore.js sitemap.xml robots.txt
+          git add Protocols/GoogleIndexEp.ehc Protocols/GoogleIndexEp.js sitemap.xml robots.txt
           if ! git diff-index --quiet HEAD; then
-            git commit -m "[ESEB V3000-Ω] Google Index EP Infrastructure Sync [V-STAMP-24]"
+            git commit -m "[ESEB V3000-Ω] Auto-Generated Dual Engine & Sitemap [V-STAMP-24]"
             git fetch origin main
             git rebase origin/main
             git push origin main
