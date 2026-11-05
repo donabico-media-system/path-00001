@@ -9,7 +9,10 @@ on:
   workflow_dispatch:        # Kích hoạt thủ công
 
 jobs:
-  mcp-a2a-hybrid-execution:
+  # =========================================================================
+  # JOB 1: BIÊN DỊCH PROTOCOL & ĐẨY TỆP HẠ TẦNG LÊN REPO (BRANCH MAIN)
+  # =========================================================================
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,7 +23,7 @@ jobs:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    # Lấy toàn bộ lịch sử commit để rebase mượt mà
+          fetch-depth: 0
 
       - name: Set up Python Environment
         uses: actions/setup-python@v5
@@ -36,20 +39,78 @@ jobs:
         run: |
           python Protocols/MCPA2aHybridCore.eseb
 
-      - name: Run MCP+A2A Serverless Engine with Direct CLASSIC_API_TOKEN
-        env:
-          CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
-        run: |
-          node Protocols/MCPA2aHybridCore.js
-
-      - name: Commit & Push Generated Entity Bridges
+      - name: Commit & Push Infrastructure Files to Main Branch
         run: |
           git config --global user.name "donabico-media-system"
           git config --global user.email "bot@donabico-media-system"
           git add Protocols/MCPA2aHybridCore.ehc Protocols/MCPA2aHybridCore.js sitemap.xml robots.txt 24242424242424242424242424242424.txt
           if ! git diff-index --quiet HEAD; then
-            git commit -m "[ESEB V3000-Ω] MCP+A2A Hybrid Core Auto-Update [V-STAMP-24]"
+            git commit -m "[ESEB V3000-Ω] Infrastructure & Key Files Commit [V-STAMP-24]"
             git fetch origin main
             git rebase origin/main
             git push origin main
           fi
+
+      - name: Trigger GitHub Pages CDN Rebuild
+        env:
+          CLASSIC_API_TOKEN: ${{ secrets.CLASSIC_API_TOKEN }}
+        run: |
+          node Protocols/MCPA2aHybridCore.js
+
+  # =========================================================================
+  # JOB 2: PHÁT TÍN HIỆU INDEXNOW (CHỈ CHẠY KHI JOB 1 HOÀN TẤT)
+  # =========================================================================
+  indexnow-broadcast:
+    needs: build-and-deploy   # RÀO CHẮN: Đợi Job 1 thành công mới kích hoạt Job 2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute IndexNow Ping (Guaranteed HTTP 200/202 OK)
+        run: |
+          node -e '
+          const https = require("https");
+          const fs = require("fs");
+          
+          let domain = "https://path-00001.donabico.com";
+          if (fs.existsSync("CNAME")) {
+            const cname = fs.readFileSync("CNAME", "utf-8").trim();
+            if (cname) domain = cname.startsWith("http") ? cname : "https://" + cname;
+          }
+          const host = domain.replace("https://", "").replace("http://", "").replace(/\/$/, "");
+          const key = "24242424242424242424242424242424";
+          
+          const postData = JSON.stringify({
+            "host": host,
+            "key": key,
+            "keyLocation": `${domain}/${key}.txt`,
+            "urlList": [`${domain}/`]
+          });
+          
+          const options = {
+            hostname: "api.indexnow.org",
+            port: 443,
+            path: "/indexnow",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              "Content-Length": Buffer.byteLength(postData)
+            }
+          };
+          
+          console.log("🚀 SENDING INDEXNOW MASTER BROADCAST FOR:", domain);
+          const req = https.request(options, (res) => {
+            console.log(`✅ INDEXNOW SIGNAL CONFIRMED: HTTP ${res.statusCode} OK`);
+            process.exit(res.statusCode === 200 || res.statusCode === 202 ? 0 : 1);
+          });
+          req.on("error", (e) => { console.error(e); process.exit(1); });
+          req.write(postData);
+          req.end();
+          '
