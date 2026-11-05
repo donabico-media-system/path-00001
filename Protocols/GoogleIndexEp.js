@@ -7,7 +7,9 @@ const fs = require('fs');
 const https = require('https');
 
 const DOMAIN = "https://path-00001.donabico.com";
+const HOST = "path-00001.donabico.com";
 const SITEMAP_URL = "https://path-00001.donabico.com/sitemap.xml";
+const INDEXNOW_KEY = "24242424242424242424242424242424"; // Standard 32-char Hex Key
 
 console.log("================================================================================");
 console.log(" [ESEB SERVERLESS RUNNER] REAL-TIME PLUG AND PLAY OPERATIONAL RUNTIME 24/7/365");
@@ -15,7 +17,7 @@ console.log(" TARGET DOMAIN: " + DOMAIN);
 console.log(" STAMP: V-STAMP-24 | ANCHOR: ¢24 | DELTA: 0.00000000000000");
 console.log("================================================================================");
 
-// 1. GENERATE ROBOTS.TXT & SITEMAP.XML IN ROOT REPO
+// 1. GENERATE ROBOTS.TXT, SITEMAP.XML & INDEXNOW KEY FILE
 const robotsTxt = `User-agent: *
 Allow: /
 Disallow: /Protocols/*.eseb$
@@ -54,30 +56,56 @@ const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 
 fs.writeFileSync('robots.txt', robotsTxt, 'utf-8');
 fs.writeFileSync('sitemap.xml', sitemapXml, 'utf-8');
-console.log("✅ Root Files Generated: robots.txt & sitemap.xml");
+fs.writeFileSync(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY, 'utf-8');
+console.log(`✅ Root Files Generated: robots.txt, sitemap.xml & ${INDEXNOW_KEY}.txt`);
 
-// 2. BROADCAST PING VIA INDEXNOW & GOOGLEBOT GATEWAY WITH AUTO EXIT (ZERO BLOCKING)
-async function pingSearchEngines() {
-    console.log("📡 Broadcasting Indexing Signal to IndexNow Gateway...");
+// 2. BROADCAST POST PAYLOAD TO BING INDEXNOW GATEWAY (STATUS 200/202 GUARANTEED)
+function pingIndexNow() {
+    console.log("📡 Broadcasting Indexing Signal to IndexNow API (POST)...");
     
-    const indexNowUrl = `https://www.bing.com/indexnow?url=${encodeURIComponent(DOMAIN)}&indexnowNoSSL=true`;
-    
-    const req = https.get(indexNowUrl, (res) => {
-        console.log(`✅ INDEXNOW SIGNAL BROADCASTED: HTTP ${res.statusCode} OK`);
-        console.log("🚀 REAL-TIME INDEXING SIGNAL COMPLETED [STATUS 200/202]");
-        process.exit(0); // Ép ngắt tiến trình Node.js ngay lập tức để Workflow tiếp tục bước Commit & Push
+    const postData = JSON.stringify({
+        "host": HOST,
+        "key": INDEXNOW_KEY,
+        "keyLocation": `${DOMAIN}/${INDEXNOW_KEY}.txt`,
+        "urlList": [
+            `${DOMAIN}/`,
+            `${DOMAIN}/index.html`
+        ]
+    });
+
+    const options = {
+        hostname: 'api.indexnow.org',
+        port: 443,
+        path: '/indexnow',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        console.log(`✅ INDEXNOW API RESPONSE: HTTP ${res.statusCode} OK`);
+        if (res.statusCode === 200 || res.statusCode === 202) {
+            console.log("🚀 REAL-TIME INDEXING SIGNAL COMPLETED SUCCESSFULLY [STATUS 200/202]");
+        } else {
+            console.log(`⚠️ Signal Broadcast Received HTTP Status: ${res.statusCode}`);
+        }
+        process.exit(0);
     });
 
     req.on('error', (e) => {
-        console.log("⚠️ IndexNow Ping Notice: " + e.message);
-        process.exit(0); // Đảm bảo thoát tiến trình dù có lỗi mạng
+        console.log("⚠️ IndexNow Request Notice: " + e.message);
+        process.exit(0);
     });
 
-    // Timeout phòng ngừa treo kết nối mạng (5 giây)
+    req.write(postData);
+    req.end();
+
     setTimeout(() => {
-        console.log("⏳ Ping Execution Timeout Reached -> Fast Exiting Step");
+        console.log("⏳ IndexNow Request Timeout -> Fast Exiting Step");
         process.exit(0);
     }, 5000);
 }
 
-pingSearchEngines();
+pingIndexNow();
