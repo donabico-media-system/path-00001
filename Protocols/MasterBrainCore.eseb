@@ -6,6 +6,7 @@ ESEB DYNAMIC LIVING ENGINE V3000-Ω | REAL NATIVE AI ENGINE (NO SIMULATION)
 MODULE: MASTER BRAIN CORE - REAL REINFORCEMENT Q-LEARNING & VECTOR ENGINE
 STAMP: V-STAMP-24 | ANCHOR: ¢24 | ENTROPY DELTA = 0.00000000000000
 BRAND: DONABICO MEDIA SYSTEM | COMPLIANCE: 04THU (100% THỰC CHIẾN)
+AUTO-6D: DOMAIN - REPO - DIRECTORY - DUALTOKEN - DEPLOY - DELTA=0
 ================================================================================
 """
 
@@ -105,7 +106,6 @@ class ESEBRealAIEngineMaster:
             return 'LOW_ENGAGEMENT';
         }}
 
-        // Tín hiệu Thưởng/Phạt (Reward) đo đạc từ tương tác User thực tế
         calculateRealReward() {{
             const timeOnPage = (Date.now() - this.userMetrics.startTime) / 1000;
             let reward = (this.userMetrics.scrollDepth * 0.5) + (this.userMetrics.clicks * 0.3) + (Math.min(timeOnPage, 60) / 60 * 0.2);
@@ -127,7 +127,6 @@ class ESEBRealAIEngineMaster:
         updateQ(state, action, reward, nextState) {{
             const currentQ = this.qTable[state][action];
             const nextMaxQ = Math.max(...Object.values(this.qTable[nextState]));
-            // Cập nhật công thức Bellman chuẩn
             const newQ = currentQ + this.alpha * (reward + this.gamma * nextMaxQ - currentQ);
             this.qTable[state][action] = +newQ.toFixed(4);
             this.saveQTable();
@@ -149,7 +148,6 @@ class ESEBRealAIEngineMaster:
         return +(dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))).toFixed(4);
     }}
 
-    // KHỞI TẠO VÀ CHẠY THỰC TẾ
     const agent = new RealQTableAgent();
     console.log("%c 🧠 [ESEB REAL AI ENGINE] HARD-LOGIC Q-LEARNING INITIALIZED (0% SIMULATION)", "color: #00ffff; font-weight: bold; background: #000; padding: 6px 12px;");
 
@@ -162,7 +160,6 @@ class ESEBRealAIEngineMaster:
         const nextState = agent.getCurrentState();
         const updatedQ = agent.updateQ(state, action, reward, nextState);
 
-        // Vector tương tác thực tại vs Vector tiêu chuẩn (1.0, 1.0, 1.0)
         const currentVector = [agent.userMetrics.scrollDepth, Math.min(agent.userMetrics.clicks / 5, 1.0), Math.min((Date.now() - agent.userMetrics.startTime) / 30000, 1.0)];
         const targetVector = [1.0, 1.0, 1.0];
         const similarity = calculateCosineSimilarity(currentVector, targetVector);
@@ -191,7 +188,7 @@ class ESEBRealAIEngineMaster:
         print(f"✅ Real AI Executable Client Engine Compiled -> Protocols/{self.module_name}.ehc")
 
     def compile_js_runner_engine(self, ctx):
-        """Biên dịch ra Protocols/MasterBrainCore.js (Serverless Runner Engine)"""
+        """Biên dịch ra Protocols/MasterBrainCore.js (Serverless Runner Engine - Strict Order)"""
         js_content = f"""/**
  * ESEB SERVERLESS RUNNER ENGINE - {self.module_name}.js
  * STAMP: {self.vstamp} | ANCHOR: {self.anchor} | DELTA: {self.delta}
@@ -212,37 +209,13 @@ console.log(" REPOSITORY: " + REPO_FULL);
 console.log(" DOMAIN: " + DOMAIN);
 console.log("================================================================================");
 
-const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /Protocols/*.eseb$\nDisallow: /.github/\n\nUser-agent: Googlebot\nAllow: /\n\nSitemap: ${{SITEMAP_URL}}\n`;
-const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n    <url>\n        <loc>${{DOMAIN}}/</loc>\n        <lastmod>${{new Date().toISOString().split('T')[0]}}</lastmod>\n        <changefreq>daily</changefreq>\n        <priority>1.0</priority>\n    </url>\n</urlset>`;
+const robotsTxt = `User-agent: *\\nAllow: /\\nDisallow: /Protocols/*.eseb$\\nDisallow: /.github/\\n\\nUser-agent: Googlebot\\nAllow: /\\n\\nSitemap: ${{SITEMAP_URL}}\\n`;
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n    <url>\\n        <loc>${{DOMAIN}}/</loc>\\n        <lastmod>${{new Date().toISOString().split('T')[0]}}</lastmod>\\n        <changefreq>daily</changefreq>\\n        <priority>1.0</priority>\\n    </url>\\n</urlset>`;
 
 fs.writeFileSync('robots.txt', robotsTxt, 'utf-8');
 fs.writeFileSync('sitemap.xml', sitemapXml, 'utf-8');
 fs.writeFileSync(`${{INDEXNOW_KEY}}.txt`, INDEXNOW_KEY, 'utf-8');
-
-function broadcastIndexing() {{
-    return new Promise((resolve) => {{
-        const postData = JSON.stringify({{
-            "host": HOST,
-            "key": INDEXNOW_KEY,
-            "keyLocation": `${{DOMAIN}}/${{INDEXNOW_KEY}}.txt`,
-            "urlList": [`${{DOMAIN}}/`]
-        }});
-        const options = {{
-            hostname: 'api.indexnow.org',
-            port: 443,
-            path: '/indexnow',
-            method: 'POST',
-            headers: {{ 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(postData) }}
-        }};
-        const req = https.request(options, (res) => {{
-            console.log(`✅ INDEXNOW REAL PING: HTTP ${{res.statusCode}} OK`);
-            resolve();
-        }});
-        req.on('error', () => resolve());
-        req.write(postData);
-        req.end();
-    }});
-}}
+console.log(`✅ Infrastructure Files Updated: robots.txt, sitemap.xml & ${{INDEXNOW_KEY}}.txt`);
 
 function broadcastCDN() {{
     return new Promise((resolve) => {{
@@ -263,9 +236,37 @@ function broadcastCDN() {{
     }});
 }}
 
+function broadcastIndexing() {{
+    return new Promise((resolve) => {{
+        const postData = JSON.stringify({{
+            "host": HOST,
+            "key": INDEXNOW_KEY,
+            "keyLocation": `${{DOMAIN}}/${{INDEXNOW_KEY}}.txt`,
+            "urlList": [`${{DOMAIN}}/`]
+        }});
+        const options = {{
+            hostname: 'api.indexnow.org',
+            port: 443,
+            path: '/indexnow',
+            method: 'POST',
+            headers: {{ 
+                'Content-Type': 'application/json; charset=utf-8', 
+                'Content-Length': Buffer.byteLength(postData) 
+            }}
+        }};
+        const req = https.request(options, (res) => {{
+            console.log(`✅ INDEXNOW REAL PING: HTTP ${{res.statusCode}} OK`);
+            resolve();
+        }});
+        req.on('error', () => resolve());
+        req.write(postData);
+        req.end();
+    }});
+}}
+
 async function run() {{
-    await broadcastIndexing();
     await broadcastCDN();
+    await broadcastIndexing();
     console.log("🚀 REAL AI SERVERLESS RUNNER COMPLETED [STATUS 200/202]");
     process.exit(0);
 }}
